@@ -1,8 +1,8 @@
 DIRECTORY:
-  raw: /workspace/template_project/image_classification/data/original/
-  raw_splitted: /workspace/template_project/image_classification/data/original_splitted/
-  preprocessed: /workspace/template_project/image_classification/data/preprocessed/
-  system_log: //workspace/template_project/image_classification/log/
+  original_data: /workspace/template_project/image_classification/data/original/
+  original_splitted_data: /workspace/template_project/image_classification/data/original_splitted/
+  preprocessed_data: /workspace/template_project/image_classification/data/preprocessed/
+  system_log: /workspace/template_project/image_classification/log/
 
 SEED:
   random_seed: 42

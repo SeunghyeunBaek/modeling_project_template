@@ -11,26 +11,27 @@ TOOD:
 from module.util import split_dataset, load_yaml, get_logger
 import os
 
+
+# Config 불러오기
+PROJECT_DIR = os.path.dirname(__file__)
+CONFIG_PATH = os.path.join(PROJECT_DIR, 'config/config.yml')
+config_dict = load_yaml(CONFIG_PATH)
+
+# 경로
+ORIGINAL_DATA_DIR = config_dict['DIRECTORY']['original_data']
+SPLITTED_DATA_DIR = config_dict['DIRECTORY']['original_splitted_data']
+LOG_DIR = config_dict['DIRECTORY']['system_log']
+
+# 분할 설정
+TRAIN_RATIO = config_dict['SPLIT_DATA']['train_ratio']
+VALIDATION_RATIO = config_dict['SPLIT_DATA']['validation_ratio']
+TEST_RATIO = config_dict['SPLIT_DATA']['test_ratio']
+
+RANDOME_SEED = config_dict['SEED']['random_seed']
+IS_STRATIFY = config_dict['SPLIT_DATA']['is_stratify']
+
 if __name__ == '__main__':
-    
-    # Config 불러오기
-    PROJECT_DIR = os.path.dirname(__file__)
-    CONFIG_PATH = os.path.join(PROJECT_DIR, 'config/config.yml')
-    config_dict = load_yaml(CONFIG_PATH)
 
-    # 경로
-    ORIGINAL_DATA_DIR = config_dict['DIRECTORY']['raw']
-    SPLITTED_DATA_DIR = config_dict['DIRECTORY']['raw_splitted']
-    LOG_DIR = config_dict['DIRECTORY']['system_log']
-
-    # 분할 설정
-    TRAIN_RATIO = config_dict['SPLIT_DATA']['train_ratio']
-    VALIDATION_RATIO = config_dict['SPLIT_DATA']['validation_ratio']
-    TEST_RATIO = config_dict['SPLIT_DATA']['test_ratio']
-
-    RANDOME_SEED = config_dict['SEED']['random_seed']
-    IS_STRATIFY = config_dict['SPLIT_DATA']['is_stratify']
-    
     # Logger 설정
     logger = get_logger(name='split_data', file_path=os.path.join(LOG_DIR, 'split_data.log'))
     
