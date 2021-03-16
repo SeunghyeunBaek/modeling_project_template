@@ -1,0 +1,16 @@
+2021-03-16 08:58:38,615 | split_data | INFO | Start split dataset
+2021-03-16 08:58:38,616 | split_data | INFO | Set original data directory: /workspace/template_project/image_classification/data/original/
+2021-03-16 08:58:38,616 | split_data | INFO | Set splitted data directory: /workspace/template_project/image_classification/data/original_splitted/
+2021-03-16 08:58:38,616 | split_data | INFO | Set train:validation:test=0.8:0.1:0.1 stratify: True seed: 42
+2021-03-16 08:58:38,730 | split_data | INFO | train data split start
+2021-03-16 08:58:38,730 | split_data | INFO | /workspace/template_project/image_classification/data/original_splitted/train/image already exists
+2021-03-16 08:58:39,470 | split_data | INFO | Json saved /workspace/template_project/image_classification/data/original_splitted/train/label.json
+2021-03-16 08:58:54,705 | split_data | INFO | 62092 files copied to /workspace/template_project/image_classification/data/original_splitted/train/image
+2021-03-16 08:58:54,705 | split_data | INFO | validation data split start
+2021-03-16 08:58:54,705 | split_data | INFO | /workspace/template_project/image_classification/data/original_splitted/validation/image already exists
+2021-03-16 08:58:54,747 | split_data | INFO | Json saved /workspace/template_project/image_classification/data/original_splitted/validation/label.json
+2021-03-16 08:58:55,285 | split_data | INFO | 3450 files copied to /workspace/template_project/image_classification/data/original_splitted/validation/image
+2021-03-16 08:58:55,285 | split_data | INFO | test data split start
+2021-03-16 08:58:55,286 | split_data | INFO | /workspace/template_project/image_classification/data/original_splitted/test/image already exists
+2021-03-16 08:58:55,323 | split_data | INFO | Json saved /workspace/template_project/image_classification/data/original_splitted/test/label.json
+2021-03-16 08:58:55,844 | split_data | INFO | 3450 files copied to /workspace/template_project/image_classification/data/original_splitted/test/image

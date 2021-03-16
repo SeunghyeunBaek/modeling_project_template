@@ -1,0 +1,14 @@
+DIRECTORY:
+  raw: /workspace/template_project/image_classification/data/original/
+  raw_splitted: /workspace/template_project/image_classification/data/original_splitted/
+  preprocessed: /workspace/template_project/image_classification/data/preprocessed/
+  system_log: //workspace/template_project/image_classification/log/
+
+SEED:
+  random_seed: 42
+
+SPLIT_DATA:
+  train_ratio: 0.8
+  validation_ratio: 0.1
+  test_ratio: 0.1
+  is_stratify: True
