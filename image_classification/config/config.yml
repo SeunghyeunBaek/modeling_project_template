@@ -12,3 +12,19 @@ SPLIT_DATA:
   validation_ratio: 0.1
   test_ratio: 0.1
   is_stratify: True
+
+TRAIN:
+  batch_size: 64
+  epoch: 10
+  learning_rate: 0.0001
+  momentum: 0.5
+  optimizer: sgd  # SGD,
+  loss_function: nll  # nll
+  metric_function: accuracy # accuracy
+  early_stopping_patience: 5
+
+DATALOADER:
+  num_workers: 4
+  shuffle: True
+  pin_memory: True
+  drop_last: True

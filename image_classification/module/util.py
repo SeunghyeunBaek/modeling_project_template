@@ -3,16 +3,22 @@
     * File IO
     * Logger
     * System
+    * Seed
 
 TODO:
     * docstring 작성
 
+Reference:    
+    * set_seed: https://hoya012.github.io/blog/reproducible_pytorch/
 """
 
 from sklearn.model_selection import train_test_split
+import numpy as np
 import logging
+import random
 import pickle
 import shutil
+import torch
 import json
 import yaml
 import os
@@ -262,6 +268,13 @@ def split_dataset(original_data_dir: str, splitted_data_dir: str,
                                     filename_list=filename_list)                                   # 이미지 저장
         logger.info(copy_msg) if logger else print(copy_msg)
 
+
+def set_seed(seed: int):
+    torch.manual_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(seed)
+    random.seed(seed)
 
 if __name__ == '__main__':
     pass

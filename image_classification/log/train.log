@@ -1,0 +1,12 @@
+2021-03-17 09:27:35,570 | train | INFO | Train epoch 0 completed, Mean loss: 0.2787918980960946 Accuracy: 0.9145944727179025
+2021-03-17 09:27:37,697 | train | INFO | Validation epoch 0 completed, Mean loss: 0.11569055169820786 Accuracy: 0.9657971014492753
+2021-03-17 09:27:46,871 | train | INFO | Train epoch 1 completed, Mean loss: 0.3813437116703429 Accuracy: 0.9416591509373188
+2021-03-17 09:27:48,715 | train | INFO | Validation epoch 1 completed, Mean loss: 0.20814545452594757 Accuracy: 0.967391304347826
+2021-03-17 09:27:57,863 | train | INFO | Train epoch 2 completed, Mean loss: 0.4485030960737277 Accuracy: 0.9540735253065344
+2021-03-17 09:27:59,806 | train | INFO | Validation epoch 2 completed, Mean loss: 0.29958832263946533 Accuracy: 0.9682125603864734
+2021-03-17 09:28:08,607 | train | INFO | Train epoch 3 completed, Mean loss: 0.4951317941230351 Accuracy: 0.9618268053855569
+2021-03-17 09:28:10,562 | train | INFO | Validation epoch 3 completed, Mean loss: 0.36565929651260376 Accuracy: 0.971304347826087
+2021-03-17 09:28:19,209 | train | INFO | Train epoch 4 completed, Mean loss: 0.5275956301453208 Accuracy: 0.9674321973845262
+2021-03-17 09:28:21,139 | train | INFO | Validation epoch 4 completed, Mean loss: 0.4624166786670685 Accuracy: 0.9711304347826087
+2021-03-17 09:28:30,290 | train | INFO | Train epoch 5 completed, Mean loss: 0.5510262273859353 Accuracy: 0.971646911035238
+2021-03-17 09:28:32,280 | train | INFO | Validation epoch 5 completed, Mean loss: 0.5532284379005432 Accuracy: 0.9714492753623188
