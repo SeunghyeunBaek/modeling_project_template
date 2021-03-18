@@ -3,6 +3,7 @@ DIRECTORY:
   original_splitted_data: /workspace/template_project/image_classification/data/original_splitted/
   preprocessed_data: /workspace/template_project/image_classification/data/preprocessed/
   system_log: /workspace/template_project/image_classification/log/
+  performance_record: /workspace/template_project/image_classification/result/
 
 SEED:
   random_seed: 42
@@ -14,17 +15,41 @@ SPLIT_DATA:
   is_stratify: True
 
 TRAIN:
-  batch_size: 64
+  model: DNN  # DNN 
+  n_input: 784
+  n_output: 10
+  batch_size: 8
   epoch: 10
   learning_rate: 0.0001
   momentum: 0.5
-  optimizer: sgd  # SGD,
+  optimizer: sgd  # SGD
   loss_function: nll  # nll
   metric_function: accuracy # accuracy
   early_stopping_patience: 5
 
 DATALOADER:
-  num_workers: 4
+  num_workers: 16
   shuffle: True
   pin_memory: True
   drop_last: True
+
+PERFORMANCE_RECORD:
+  column_list: 
+    - experiment_serial
+    - experiment_timestamp
+    - model_str
+    - optimizer_str
+    - loss_function_str
+    - metric_function_str
+    - early_stopping_patience
+    - batch_size
+    - epoch
+    - learning_rate
+    - momentum
+    - random_seed
+    - epoch_index
+    - train_loss
+    - validation_loss
+    - train_score
+    - validation_score
+    - is_early_stop

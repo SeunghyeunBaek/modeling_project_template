@@ -1,12 +1,153 @@
-2021-03-17 09:27:35,570 | train | INFO | Train epoch 0 completed, Mean loss: 0.2787918980960946 Accuracy: 0.9145944727179025
-2021-03-17 09:27:37,697 | train | INFO | Validation epoch 0 completed, Mean loss: 0.11569055169820786 Accuracy: 0.9657971014492753
-2021-03-17 09:27:46,871 | train | INFO | Train epoch 1 completed, Mean loss: 0.3813437116703429 Accuracy: 0.9416591509373188
-2021-03-17 09:27:48,715 | train | INFO | Validation epoch 1 completed, Mean loss: 0.20814545452594757 Accuracy: 0.967391304347826
-2021-03-17 09:27:57,863 | train | INFO | Train epoch 2 completed, Mean loss: 0.4485030960737277 Accuracy: 0.9540735253065344
-2021-03-17 09:27:59,806 | train | INFO | Validation epoch 2 completed, Mean loss: 0.29958832263946533 Accuracy: 0.9682125603864734
-2021-03-17 09:28:08,607 | train | INFO | Train epoch 3 completed, Mean loss: 0.4951317941230351 Accuracy: 0.9618268053855569
-2021-03-17 09:28:10,562 | train | INFO | Validation epoch 3 completed, Mean loss: 0.36565929651260376 Accuracy: 0.971304347826087
-2021-03-17 09:28:19,209 | train | INFO | Train epoch 4 completed, Mean loss: 0.5275956301453208 Accuracy: 0.9674321973845262
-2021-03-17 09:28:21,139 | train | INFO | Validation epoch 4 completed, Mean loss: 0.4624166786670685 Accuracy: 0.9711304347826087
-2021-03-17 09:28:30,290 | train | INFO | Train epoch 5 completed, Mean loss: 0.5510262273859353 Accuracy: 0.971646911035238
-2021-03-17 09:28:32,280 | train | INFO | Validation epoch 5 completed, Mean loss: 0.5532284379005432 Accuracy: 0.9714492753623188
+2021-03-18 08:00:11,410 | train | INFO | Train epoch 0 Mean loss: 0.8139838682563082 Accuracy: 0.7598080267989435
+2021-03-18 08:00:12,978 | train | INFO | Validation epoch 0 Mean loss: 0.3456625135221343 Accuracy: 0.903768115942029
+2021-03-18 08:00:12,987 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_075937/model.pth
+2021-03-18 08:00:36,316 | train | INFO | Train epoch 1 Mean loss: 0.3013155198423417 Accuracy: 0.9137086903304773
+2021-03-18 08:00:37,833 | train | INFO | Validation epoch 1 Mean loss: 0.2562616045492283 Accuracy: 0.9194202898550725
+2021-03-18 08:00:37,845 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_075937/model.pth
+2021-03-18 08:00:37,845 | train | INFO | Validation loss decreased 0.3456625135221343 -> 0.2562616045492283
+2021-03-18 08:01:00,992 | train | INFO | Train epoch 2 Mean loss: 0.23540764052574686 Accuracy: 0.9318108613025833
+2021-03-18 08:01:02,583 | train | INFO | Validation epoch 2 Mean loss: 0.20349023703647695 Accuracy: 0.9347826086956522
+2021-03-18 08:01:02,601 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_075937/model.pth
+2021-03-18 08:01:02,602 | train | INFO | Validation loss decreased 0.2562616045492283 -> 0.20349023703647695
+2021-03-18 08:01:26,159 | train | INFO | Train epoch 3 Mean loss: 0.19866741106385927 Accuracy: 0.9427301423693873
+2021-03-18 08:01:27,871 | train | INFO | Validation epoch 3 Mean loss: 0.17721859511689864 Accuracy: 0.9440579710144927
+2021-03-18 08:01:27,882 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_075937/model.pth
+2021-03-18 08:01:27,882 | train | INFO | Validation loss decreased 0.20349023703647695 -> 0.17721859511689864
+2021-03-18 08:01:51,217 | train | INFO | Train epoch 4 Mean loss: 0.17223897050344525 Accuracy: 0.9492044063647491
+2021-03-18 08:01:52,773 | train | INFO | Validation epoch 4 Mean loss: 0.16457451190637506 Accuracy: 0.9498550724637681
+2021-03-18 08:01:52,790 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_075937/model.pth
+2021-03-18 08:01:52,790 | train | INFO | Validation loss decreased 0.17721859511689864 -> 0.16457451190637506
+2021-03-18 08:02:15,793 | train | INFO | Train epoch 5 Mean loss: 0.1528770361676551 Accuracy: 0.9555176190169427
+2021-03-18 08:02:17,341 | train | INFO | Validation epoch 5 Mean loss: 0.151608689237332 Accuracy: 0.956231884057971
+2021-03-18 08:02:17,353 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_075937/model.pth
+2021-03-18 08:02:17,354 | train | INFO | Validation loss decreased 0.16457451190637506 -> 0.151608689237332
+2021-03-18 08:02:40,494 | train | INFO | Train epoch 6 Mean loss: 0.13637100798719543 Accuracy: 0.9606229465953746
+2021-03-18 08:02:42,137 | train | INFO | Validation epoch 6 Mean loss: 0.13654206346315534 Accuracy: 0.9582608695652174
+2021-03-18 08:02:42,154 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_075937/model.pth
+2021-03-18 08:02:42,154 | train | INFO | Validation loss decreased 0.151608689237332 -> 0.13654206346315534
+2021-03-18 08:03:04,772 | train | INFO | Train epoch 7 Mean loss: 0.12370725224213473 Accuracy: 0.9638278683244218
+2021-03-18 08:03:06,402 | train | INFO | Validation epoch 7 Mean loss: 0.12914166264127994 Accuracy: 0.9605797101449275
+2021-03-18 08:03:06,416 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_075937/model.pth
+2021-03-18 08:03:06,417 | train | INFO | Validation loss decreased 0.13654206346315534 -> 0.12914166264127994
+2021-03-18 08:03:29,117 | train | INFO | Train epoch 8 Mean loss: 0.1129965415985006 Accuracy: 0.9668878438446177
+2021-03-18 08:03:30,804 | train | INFO | Validation epoch 8 Mean loss: 0.11829832095058931 Accuracy: 0.9628985507246377
+2021-03-18 08:03:30,816 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_075937/model.pth
+2021-03-18 08:03:30,816 | train | INFO | Validation loss decreased 0.12914166264127994 -> 0.11829832095058931
+2021-03-18 08:03:53,882 | train | INFO | Train epoch 9 Mean loss: 0.10332876912218036 Accuracy: 0.9694002447980417
+2021-03-18 08:03:55,516 | train | INFO | Validation epoch 9 Mean loss: 0.11260342932157759 Accuracy: 0.9640579710144928
+2021-03-18 08:03:55,535 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_075937/model.pth
+2021-03-18 08:03:55,536 | train | INFO | Validation loss decreased 0.11829832095058931 -> 0.11260342932157759
+2021-03-18 08:12:39,057 | train | INFO | Train epoch 0 Mean loss: 0.8139838682563082 Accuracy: 0.7598080267989435
+2021-03-18 08:12:42,798 | train | INFO | Validation epoch 0 Mean loss: 0.3456625135221343 Accuracy: 0.903768115942029
+2021-03-18 08:12:42,810 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_081158/model.pth
+2021-03-18 08:16:22,603 | train | INFO | Train epoch 0 Mean loss: 0.5709364816581778 Accuracy: 0.8325066031050699
+2021-03-18 08:16:24,869 | train | INFO | Validation epoch 0 Mean loss: 0.2515176116707532 Accuracy: 0.9255072463768116
+2021-03-18 08:16:24,885 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_081530/model.pth
+2021-03-18 08:17:06,332 | train | INFO | Train epoch 1 Mean loss: 0.22827381565359328 Accuracy: 0.9338884236294531
+2021-03-18 08:17:08,481 | train | INFO | Validation epoch 1 Mean loss: 0.19556913264851639 Accuracy: 0.9356521739130435
+2021-03-18 08:17:08,503 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_081530/model.pth
+2021-03-18 08:17:08,504 | train | INFO | Validation loss decreased 0.2515176116707532 -> 0.19556913264851639
+2021-03-18 08:17:50,640 | train | INFO | Train epoch 2 Mean loss: 0.17197414161601426 Accuracy: 0.9493493525736004
+2021-03-18 08:17:52,786 | train | INFO | Validation epoch 2 Mean loss: 0.14660070561844368 Accuracy: 0.952463768115942
+2021-03-18 08:17:52,797 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_081530/model.pth
+2021-03-18 08:17:52,797 | train | INFO | Validation loss decreased 0.19556913264851639 -> 0.14660070561844368
+2021-03-18 08:18:36,099 | train | INFO | Train epoch 3 Mean loss: 0.13929570328966825 Accuracy: 0.9589641177607421
+2021-03-18 08:18:38,473 | train | INFO | Validation epoch 3 Mean loss: 0.12467609379332567 Accuracy: 0.9617391304347827
+2021-03-18 08:18:38,494 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_081530/model.pth
+2021-03-18 08:18:38,494 | train | INFO | Validation loss decreased 0.14660070561844368 -> 0.12467609379332567
+2021-03-18 08:19:20,748 | train | INFO | Train epoch 4 Mean loss: 0.11555721168736663 Accuracy: 0.9662597436062617
+2021-03-18 08:19:22,923 | train | INFO | Validation epoch 4 Mean loss: 0.1277868143801807 Accuracy: 0.9620289855072464
+2021-03-18 08:19:22,923 | train | INFO | Early stopping counter 1/5
+2021-03-18 08:20:05,169 | train | INFO | Train epoch 5 Mean loss: 0.09933320517686654 Accuracy: 0.9711718095728918
+2021-03-18 08:20:07,359 | train | INFO | Validation epoch 5 Mean loss: 0.11745707051335848 Accuracy: 0.9649275362318841
+2021-03-18 08:20:07,374 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_081530/model.pth
+2021-03-18 08:20:07,374 | train | INFO | Validation loss decreased 0.12467609379332567 -> 0.11745707051335848
+2021-03-18 08:20:49,695 | train | INFO | Train epoch 6 Mean loss: 0.08557001944829071 Accuracy: 0.9749726212716614
+2021-03-18 08:20:51,846 | train | INFO | Validation epoch 6 Mean loss: 0.1006597204990955 Accuracy: 0.9669565217391304
+2021-03-18 08:20:51,857 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_081530/model.pth
+2021-03-18 08:20:51,857 | train | INFO | Validation loss decreased 0.11745707051335848 -> 0.1006597204990955
+2021-03-18 08:21:35,256 | train | INFO | Train epoch 7 Mean loss: 0.07462975421983205 Accuracy: 0.9782419635379759
+2021-03-18 08:21:37,397 | train | INFO | Validation epoch 7 Mean loss: 0.10180663547508985 Accuracy: 0.9652173913043478
+2021-03-18 08:21:37,397 | train | INFO | Early stopping counter 2/5
+2021-03-18 08:22:20,488 | train | INFO | Train epoch 8 Mean loss: 0.06511527776308323 Accuracy: 0.9809798363718354
+2021-03-18 08:22:22,514 | train | INFO | Validation epoch 8 Mean loss: 0.09167046430033118 Accuracy: 0.9701449275362319
+2021-03-18 08:22:22,535 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_081530/model.pth
+2021-03-18 08:22:22,535 | train | INFO | Validation loss decreased 0.1006597204990955 -> 0.09167046430033118
+2021-03-18 08:23:05,096 | train | INFO | Train epoch 9 Mean loss: 0.057793574484259036 Accuracy: 0.9829607678928042
+2021-03-18 08:23:07,188 | train | INFO | Validation epoch 9 Mean loss: 0.08751496943527076 Accuracy: 0.9710144927536232
+2021-03-18 08:23:07,206 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_081530/model.pth
+2021-03-18 08:23:07,206 | train | INFO | Validation loss decreased 0.09167046430033118 -> 0.08751496943527076
+2021-03-18 08:56:55,894 | train | INFO | Train epoch 0 Mean loss: 0.5709364816581778 Accuracy: 0.8325066031050699
+2021-03-18 08:57:00,078 | train | INFO | Validation epoch 0 Mean loss: 0.2515176116707532 Accuracy: 0.9255072463768116
+2021-03-18 08:57:00,090 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_085551/model.pth
+2021-03-18 08:57:54,102 | train | INFO | Train epoch 1 Mean loss: 0.22827381565359328 Accuracy: 0.9338884236294531
+2021-03-18 08:57:58,453 | train | INFO | Validation epoch 1 Mean loss: 0.19556913264851639 Accuracy: 0.9356521739130435
+2021-03-18 08:57:58,469 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_085551/model.pth
+2021-03-18 08:57:58,469 | train | INFO | Validation loss decreased 0.2515176116707532 -> 0.19556913264851639
+2021-03-18 08:58:53,512 | train | INFO | Train epoch 2 Mean loss: 0.17197414161601426 Accuracy: 0.9493493525736004
+2021-03-18 08:58:58,126 | train | INFO | Validation epoch 2 Mean loss: 0.14660070561844368 Accuracy: 0.952463768115942
+2021-03-18 08:58:58,142 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_085551/model.pth
+2021-03-18 08:58:58,146 | train | INFO | Validation loss decreased 0.19556913264851639 -> 0.14660070561844368
+2021-03-18 08:59:53,608 | train | INFO | Train epoch 3 Mean loss: 0.13929570328966825 Accuracy: 0.9589641177607421
+2021-03-18 08:59:58,011 | train | INFO | Validation epoch 3 Mean loss: 0.12467609379332567 Accuracy: 0.9617391304347827
+2021-03-18 08:59:58,027 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_085551/model.pth
+2021-03-18 08:59:58,027 | train | INFO | Validation loss decreased 0.14660070561844368 -> 0.12467609379332567
+2021-03-18 09:00:52,708 | train | INFO | Train epoch 4 Mean loss: 0.11555721168736663 Accuracy: 0.9662597436062617
+2021-03-18 09:00:57,472 | train | INFO | Validation epoch 4 Mean loss: 0.1277868143801807 Accuracy: 0.9620289855072464
+2021-03-18 09:00:57,472 | train | INFO | Early stopping counter 1/5
+2021-03-18 09:01:52,720 | train | INFO | Train epoch 5 Mean loss: 0.09933320517686654 Accuracy: 0.9711718095728918
+2021-03-18 09:01:57,219 | train | INFO | Validation epoch 5 Mean loss: 0.11745707051335848 Accuracy: 0.9649275362318841
+2021-03-18 09:01:57,237 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_085551/model.pth
+2021-03-18 09:01:57,238 | train | INFO | Validation loss decreased 0.12467609379332567 -> 0.11745707051335848
+2021-03-18 09:02:54,287 | train | INFO | Train epoch 6 Mean loss: 0.08557001944829071 Accuracy: 0.9749726212716614
+2021-03-18 09:02:58,696 | train | INFO | Validation epoch 6 Mean loss: 0.1006597204990955 Accuracy: 0.9669565217391304
+2021-03-18 09:02:58,713 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_085551/model.pth
+2021-03-18 09:02:58,713 | train | INFO | Validation loss decreased 0.11745707051335848 -> 0.1006597204990955
+2021-03-18 09:03:55,919 | train | INFO | Train epoch 7 Mean loss: 0.07462975421983205 Accuracy: 0.9782419635379759
+2021-03-18 09:04:00,331 | train | INFO | Validation epoch 7 Mean loss: 0.10180663547508985 Accuracy: 0.9652173913043478
+2021-03-18 09:04:00,331 | train | INFO | Early stopping counter 2/5
+2021-03-18 09:04:57,799 | train | INFO | Train epoch 8 Mean loss: 0.06511527776308323 Accuracy: 0.9809798363718354
+2021-03-18 09:05:02,259 | train | INFO | Validation epoch 8 Mean loss: 0.09167046430033118 Accuracy: 0.9701449275362319
+2021-03-18 09:05:02,273 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_085551/model.pth
+2021-03-18 09:05:02,274 | train | INFO | Validation loss decreased 0.1006597204990955 -> 0.09167046430033118
+2021-03-18 09:06:01,239 | train | INFO | Train epoch 9 Mean loss: 0.057793574484259036 Accuracy: 0.9829607678928042
+2021-03-18 09:06:05,591 | train | INFO | Validation epoch 9 Mean loss: 0.08751496943527076 Accuracy: 0.9710144927536232
+2021-03-18 09:06:05,601 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_085551/model.pth
+2021-03-18 09:06:05,601 | train | INFO | Validation loss decreased 0.09167046430033118 -> 0.08751496943527076
+2021-03-18 09:17:21,521 | train | INFO | Train epoch 0 Mean loss: 0.5709364816581778 Accuracy: 0.8325066031050699
+2021-03-18 09:17:26,944 | train | INFO | Validation epoch 0 Mean loss: 0.2515176116707532 Accuracy: 0.9255072463768116
+2021-03-18 09:17:26,961 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_091614/model.pth
+2021-03-18 09:18:25,329 | train | INFO | Train epoch 1 Mean loss: 0.22827381565359328 Accuracy: 0.9338884236294531
+2021-03-18 09:18:29,973 | train | INFO | Validation epoch 1 Mean loss: 0.19556913264851639 Accuracy: 0.9356521739130435
+2021-03-18 09:18:29,983 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_091614/model.pth
+2021-03-18 09:18:29,983 | train | INFO | Validation loss decreased 0.2515176116707532 -> 0.19556913264851639
+2021-03-18 09:19:27,773 | train | INFO | Train epoch 2 Mean loss: 0.17197414161601426 Accuracy: 0.9493493525736004
+2021-03-18 09:19:32,881 | train | INFO | Validation epoch 2 Mean loss: 0.14660070561844368 Accuracy: 0.952463768115942
+2021-03-18 09:19:32,896 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_091614/model.pth
+2021-03-18 09:19:32,896 | train | INFO | Validation loss decreased 0.19556913264851639 -> 0.14660070561844368
+2021-03-18 09:20:29,861 | train | INFO | Train epoch 3 Mean loss: 0.13929570328966825 Accuracy: 0.9589641177607421
+2021-03-18 09:20:37,809 | train | INFO | Validation epoch 3 Mean loss: 0.12467609379332567 Accuracy: 0.9617391304347827
+2021-03-18 09:20:37,828 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_091614/model.pth
+2021-03-18 09:20:37,829 | train | INFO | Validation loss decreased 0.14660070561844368 -> 0.12467609379332567
+2021-03-18 09:21:34,513 | train | INFO | Train epoch 4 Mean loss: 0.11555721168736663 Accuracy: 0.9662597436062617
+2021-03-18 09:21:39,647 | train | INFO | Validation epoch 4 Mean loss: 0.1277868143801807 Accuracy: 0.9620289855072464
+2021-03-18 09:21:39,648 | train | INFO | Early stopping counter 1/5
+2021-03-18 09:22:38,186 | train | INFO | Train epoch 5 Mean loss: 0.09933320517686654 Accuracy: 0.9711718095728918
+2021-03-18 09:22:42,816 | train | INFO | Validation epoch 5 Mean loss: 0.11745707051335848 Accuracy: 0.9649275362318841
+2021-03-18 09:22:42,834 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_091614/model.pth
+2021-03-18 09:22:42,834 | train | INFO | Validation loss decreased 0.12467609379332567 -> 0.11745707051335848
+2021-03-18 09:23:42,436 | train | INFO | Train epoch 6 Mean loss: 0.08557001944829071 Accuracy: 0.9749726212716614
+2021-03-18 09:23:47,373 | train | INFO | Validation epoch 6 Mean loss: 0.1006597204990955 Accuracy: 0.9669565217391304
+2021-03-18 09:23:47,383 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_091614/model.pth
+2021-03-18 09:23:47,383 | train | INFO | Validation loss decreased 0.11745707051335848 -> 0.1006597204990955
+2021-03-18 09:24:45,376 | train | INFO | Train epoch 7 Mean loss: 0.07462975421983205 Accuracy: 0.9782419635379759
+2021-03-18 09:24:51,624 | train | INFO | Validation epoch 7 Mean loss: 0.10180663547508985 Accuracy: 0.9652173913043478
+2021-03-18 09:24:51,624 | train | INFO | Early stopping counter 2/5
+2021-03-18 09:25:52,460 | train | INFO | Train epoch 8 Mean loss: 0.06511527776308323 Accuracy: 0.9809798363718354
+2021-03-18 09:25:57,542 | train | INFO | Validation epoch 8 Mean loss: 0.09167046430033118 Accuracy: 0.9701449275362319
+2021-03-18 09:25:57,557 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_091614/model.pth
+2021-03-18 09:25:57,557 | train | INFO | Validation loss decreased 0.1006597204990955 -> 0.09167046430033118
+2021-03-18 09:26:54,758 | train | INFO | Train epoch 9 Mean loss: 0.057793574484259036 Accuracy: 0.9829607678928042
+2021-03-18 09:27:00,557 | train | INFO | Validation epoch 9 Mean loss: 0.08751496943527076 Accuracy: 0.9710144927536232
+2021-03-18 09:27:00,576 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/DNN_20210318_091614/model.pth
+2021-03-18 09:27:00,576 | train | INFO | Validation loss decreased 0.09167046430033118 -> 0.08751496943527076

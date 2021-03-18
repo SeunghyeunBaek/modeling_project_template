@@ -50,3 +50,13 @@ class DNN(nn.Module):
         output = F.log_softmax(h6, dim=1)
         
         return output
+
+
+def get_model(model_str: str):
+
+    model = None
+
+    if model_str == 'DNN':
+        model = DNN
+
+    return model

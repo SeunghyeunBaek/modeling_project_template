@@ -275,6 +275,7 @@ def set_seed(seed: int):
     torch.backends.cudnn.benchmark = False
     np.random.seed(seed)
     random.seed(seed)
+    
 
 if __name__ == '__main__':
     pass
