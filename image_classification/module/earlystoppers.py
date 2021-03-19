@@ -84,6 +84,10 @@ class LossEarlyStopper():
             model (`model`): model
         
         """
+        # check_point = {
+        #     'model': model.state_dict(),
+        #     'optimizer': optimizer.state_dict(),
+        # }
         msg = f"Weight saved: {self.weight_path}"
         torch.save(model.state_dict(), self.weight_path)
         self.min_loss = loss

@@ -163,7 +163,7 @@ def split_dataset(original_data_dir: str, splitted_data_dir: str,
 
     """train,test,validation 데이터 셋 생성
         
-        original_data_dir 에서 설정한 비율(config.yaml)로 train, validation, test 분리
+        original_data_dir 에서 일정 비율(config.yaml)로 train, validation, test 분리
         splitted_data_dir 에 train, validation, test 경로 생성 후 이미지, 라벨 저장
         경로 구성 방식은 Note 참고
 
@@ -173,7 +173,7 @@ def split_dataset(original_data_dir: str, splitted_data_dir: str,
             train_ratio (float): Train 데이터 비율
             validation_ratio (float): Validation 데이터 비율
             test_ratio (float): Test 데이터 비율
-            is_stratify (bool): True 로 설정 시 label 파일 value 값을 target 으로 stratify split 진행
+            is_stratify (bool): True 로 설정 시 label dictionary value를 target 으로 stratify split 진행
             random_seed (int): random seed
             logger (`logging.RootLogger`, optional): 미설정 시 print로 메시지 출력
 
