@@ -22,6 +22,16 @@ test.py <br>
 * train_{모델명}_{timestamp}
 * predict_{모델명}_{timestamp}
 
+## Random seed
+
+```python
+def set_seed(seed: int):
+    torch.manual_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(seed)
+    random.seed(seed)
+```
 
 ## Reference
 * [MNIST DNN부터 CNN까지](https://korchris.github.io/2019/08/23/mnist/)

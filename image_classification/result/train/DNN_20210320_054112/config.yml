@@ -1,0 +1,50 @@
+DATALOADER:
+  drop_last: true
+  num_workers: 16
+  pin_memory: true
+  shuffle: true
+DIRECTORY:
+  original_data: /workspace/template_project/image_classification/data/sample10/
+  original_splitted_data: /workspace/template_project/image_classification/data/sample10_splitted/
+  performance_record: /workspace/template_project/image_classification/result/train/
+  preprocessed_data: /workspace/template_project/image_classification/data/preprocessed/
+  system_log: /workspace/template_project/image_classification/log/
+PERFORMANCE_RECORD:
+  column_list:
+  - experiment_serial
+  - experiment_timestamp
+  - model_str
+  - optimizer_str
+  - loss_function_str
+  - metric_function_str
+  - early_stopping_patience
+  - batch_size
+  - epoch
+  - learning_rate
+  - momentum
+  - random_seed
+  - epoch_index
+  - train_loss
+  - validation_loss
+  - train_score
+  - validation_score
+  - is_early_stop
+SEED:
+  random_seed: 42
+SPLIT_DATA:
+  is_stratify: true
+  test_ratio: 0.1
+  train_ratio: 0.8
+  validation_ratio: 0.1
+TRAIN:
+  batch_size: 8
+  early_stopping_patience: 5
+  epoch: 10
+  learning_rate: 0.0001
+  loss_function: nll
+  metric_function: accuracy
+  model: DNN
+  momentum: 0.5
+  n_input: 784
+  n_output: 10
+  optimizer: sgd

@@ -316,13 +316,6 @@ def split_dataset(original_data_dir: str, splitted_data_dir: str,
                                     filename_list=filename_list)                                   # 이미지 저장
         logger.info(copy_msg) if logger else print(copy_msg)
 
-
-def set_seed(seed: int):
-    torch.manual_seed(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    np.random.seed(seed)
-    random.seed(seed)
     
 
 if __name__ == '__main__':

@@ -6,8 +6,8 @@
 from module.dataloader import ImageDataset
 from torch.utils.data import DataLoader
 
-from module.util import load_yaml, save_yaml, set_seed, get_logger
 from module.trainer import BatchTrainer, PerformanceRecorder
+from module.util import load_yaml, save_yaml, get_logger
 from module.earlystoppers import LossEarlyStopper
 from module.metrics import get_metric_function
 from module.losses import get_loss_function
@@ -15,6 +15,8 @@ from module.optimizer import get_optimizer
 from model.model import get_model, DNN
 
 from datetime import datetime
+import numpy as np
+import random
 import os
 
 import torch
@@ -63,9 +65,17 @@ PERFORMANCE_RECORD_COLUMN_NAME_LIST = config['PERFORMANCE_RECORD']['column_list'
 
 if __name__ == '__main__':
 
-    set_seed(RANDOM_SEED)
-
+    # Set random seed
+    torch.manual_seed(RANDOM_SEED)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    np.random.seed(RANDOM_SEED)
+    random.seed(RANDOM_SEED)
+    
+    # Set device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    
+    # Set system logger
     system_logger = get_logger(name='train', file_path=SYSTEM_LOGGER_PATH)
 
     """
@@ -89,9 +99,11 @@ if __name__ == '__main__':
                                         pin_memory=PIN_MEMORY)
 
 
+    # Load model architecture
     model = get_model(model_str=MODEL_STR)
     model = model(n_input=N_INPUT, n_output=N_OUTPUT).to(device)
 
+    # Load train module
     optimizer = get_optimizer(optimizer_str=OPTIMIZER_STR)
     optimizer = optimizer(model.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)
     loss_function = get_loss_function(loss_function_str=LOSS_FUNCTION_STR)
@@ -127,6 +139,7 @@ if __name__ == '__main__':
                     MOMENTUM,
                     RANDOM_SEED]                    
 
+    # Train
     for epoch_index in range(EPOCH):
         trainer.train_batch(dataloader=train_dataloader, epoch_index=epoch_index, verbose=False)
         trainer.validate_batch(dataloader=validation_dataloader, epoch_index=epoch_index, verbose=False)
