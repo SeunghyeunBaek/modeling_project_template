@@ -1,8 +1,10 @@
 """
 TODO:
-    * metric 함수 추가
-
+    * APM scaler 추가
+    * metric 함수 추가 | done
 """
+
+# from torch.cuda.amp import GradScaler, autocast
 from module.util import make_directory
 import numpy as np
 import logging
@@ -62,6 +64,9 @@ class BatchTrainer():
         self.validation_loss_mean = 0
         self.validation_loss_sum = 0
 
+        # AMP scaler
+        # amp_scaler = GradScaler()
+
 
     def train_batch(self, dataloader, epoch_index, verbose=False, logging_interval=1):
         
@@ -84,6 +89,7 @@ class BatchTrainer():
             targe_list = target.cpu().tolist()
             batch_score = self.metric_function(targe_list, target_pred_list)
 
+            # History
             self.train_target_list += targe_list
             self.train_target_pred_list += target_pred_list
             self.train_batch_score_list.append(batch_score)
@@ -94,13 +100,13 @@ class BatchTrainer():
 
             # Log verbose
             if verbose & (batch_index % logging_interval == 0):
-                msg = f"Train epoch {epoch_index} batch {batch_index}/{len(dataloader)}: {batch_index * len(image)}/{len(dataloader.dataset)} mean loss: {batch_loss_mean} score: {batch_score}"
+                msg = f"Epoch {epoch_index} train batch {batch_index}/{len(dataloader)}: {batch_index * len(image)}/{len(dataloader.dataset)} mean loss: {batch_loss_mean} score: {batch_score}"
                 self.logger.info(msg) if self.logger else print(msg)
 
         self.train_loss_mean = self.train_loss_sum / len(dataloader.dataset)
         self.train_score = self.metric_function(self.train_target_list, self.train_target_pred_list)
 
-        msg = f"Train epoch {epoch_index} Mean loss: {self.train_loss_mean} Accuracy: {self.train_score}"
+        msg = f"Epoch {epoch_index}, Train, Mean loss: {self.train_loss_mean}, Accuracy: {self.train_score}"
         self.logger.info(msg) if self.logger else print(msg)
         
 
@@ -125,6 +131,7 @@ class BatchTrainer():
                 target_list = target.cpu().tolist()
                 batch_score = self.metric_function(target_list, target_pred_list)
 
+                # History
                 self.valdiation_target_list += target_list
                 self.validation_target_pred_list += target_pred_list
                 self.validation_batch_score_list.append(batch_score)
@@ -137,7 +144,7 @@ class BatchTrainer():
             self.validation_loss_mean = self.validation_loss_sum / len(dataloader.dataset)
             self.validation_score = self.metric_function(self.valdiation_target_list, self.validation_target_pred_list)
             
-            msg = f"Validation epoch {epoch_index} Mean loss: {self.validation_loss_mean} Accuracy: {self.validation_score}"
+            msg = f"Epoch {epoch_index}, Validation, Mean loss: {self.validation_loss_mean}, Accuracy: {self.validation_score}"
             self.logger.info(msg) if self.logger else print(msg)
 
 
@@ -180,20 +187,19 @@ class BatchTrainer():
         self.validation_loss_sum = 0
 
 
-
 class PerformanceRecorder():
 
     def __init__(self, serial: str, column_list: list, root_dir: str):
         """Recorder 초기화
             
-            Args:
-                serial (str):
-                column_list (str):
-                root_dir (str):
-                record_dir (str):
+        Args:
+            serial (str):
+            column_list (str):
+            root_dir (str):
+            record_dir (str):
 
-            Note:
-                Instance 생성 시 dir + serial/ 로 경로 생성
+        Note:
+            Instance 생성 시 dir + serial/ 로 경로 생성
 
         """
         self.serial = serial
@@ -207,8 +213,13 @@ class PerformanceRecorder():
 
         make_directory(self.record_dir)
 
-
     def add_row(self, row):
+        """Epoch 단위 성능 적재
+
+        Args:
+            row (list): 
+
+        """
         
         with open(self.record_filepath, newline='', mode='a') as f:
             writer = csv.writer(f)
@@ -220,5 +231,15 @@ class PerformanceRecorder():
         
         self.row_counter += 1
 
+    def save_checkpoint()-> None:
+        """Weight 저장
+
+        Args:
+            loss (float): validation loss
+            model (`model`): model
+        
+        """
+        # torch.save(model.state_dict(), self.weight_path)
+                         
 if __name__ == '__main__':
     pass

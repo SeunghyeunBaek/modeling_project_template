@@ -34,5 +34,3 @@ class ImageDataset(Dataset):
 # class ImageDataLoader(DataLoader):
 #     def __init__(self):
 #        super(ImageDataLoader, self).__init__()
-    
-    

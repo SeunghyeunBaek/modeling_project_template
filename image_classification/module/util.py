@@ -157,6 +157,54 @@ def make_directory(directory: str)-> str:
     return msg
 
 
+def sample_dataset(data_dir:str, sample_data_dir: str, sample_ratio:float):
+    """데이터 샘플링
+        
+        원본 데이터 경로와 동일한 디렉토리 구조 생성 후 저장
+        
+    Args:
+        data_dir (str): 원본 데이터 경로
+        sample_data_dir (str): 샘플링 데이터 저장 경로
+        sample_ratio (float): 샘플 비율
+        
+    Note:
+        data_dir 은 아래와 같은 구성이라고 가정
+        ```
+        data_dir/
+            \_image/
+                \_image001.png
+                \_image002.png
+                ...
+            \_label.json/
+        ```
+    """
+
+    # 경로 생성
+    sample_image_dir = os.path.join(sample_data_dir, 'image')
+    sample_label_path = os.path.join(sample_data_dir, 'label.json')
+    msg = make_directory(sample_image_dir) + '\n'
+
+    # 라벨 파일 불러오기
+    all_label_dict = load_json(os.path.join(data_dir, 'label.json'))
+    all_filename_list = list(all_label_dict.keys())
+    
+    # 샘플링
+    n_data = len(all_filename_list)
+    n_sample = round(n_data*sample_ratio)
+    sample_filename_list = random.sample(all_filename_list, n_sample)
+    sample_label_dict = {filename: target for filename, target in all_label_dict.items() if filename in sample_filename_list}
+
+    # 저장
+    select_copy_file(from_directory=os.path.join(data_dir, 'image'),
+                     to_directory=sample_image_dir,
+                     filename_list=sample_filename_list)
+
+    save_json(path=sample_label_path, obj=sample_label_dict)
+    
+    msg += f"Sampling {sample_ratio}, {n_data} -> {n_sample} saved {sample_data_dir}"
+    print(msg)
+
+    
 def split_dataset(original_data_dir: str, splitted_data_dir: str, 
                   train_ratio: float, validation_ratio: float, test_ratio: float, 
                   is_stratify: bool,  random_seed: int, logger: logging.RootLogger=None)-> None:

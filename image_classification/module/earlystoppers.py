@@ -8,7 +8,9 @@ import logging
 import torch
 
 class LossEarlyStopper():
-    """
+    """Early stoppiing 여부 판단
+        최소 loss 저장
+        현재 epoch loss가 최소 loss 보다 작을 경우 모델 저장(save_checkpoint)
     
     Attributes:
         patience (int): loss가 줄어들지 않아도 학습할 epoch 수
@@ -21,7 +23,7 @@ class LossEarlyStopper():
 
     """
 
-    def __init__(self, patience: int, weight_path: str, verbose: bool, logger:logging.RootLogger=None)-> None:
+    def __init__(self, patience: int, weight_path:str, verbose: bool, logger:logging.RootLogger=None)-> None:
         """ 초기화
         
         Args:
@@ -38,7 +40,7 @@ class LossEarlyStopper():
         self.min_loss = np.Inf
         self.logger = logger
         self.stop = False
-
+        self.save_model = False
 
     def check_early_stopping(self, loss: float, model: "model")-> None:
         """Early stopping 여부 판단
@@ -59,7 +61,7 @@ class LossEarlyStopper():
 
         elif loss > self.min_loss:
             self.patience_counter += 1
-            msg = f"Early stopping counter {self.patience_counter}/{self.patience}"
+            msg = f"Early stopper, Early stopping counter {self.patience_counter}/{self.patience}"
 
             if self.patience_counter == self.patience:
                 self.stop = True
@@ -68,13 +70,13 @@ class LossEarlyStopper():
                 self.logger.info(msg) if self.logger else print(msg)
                 
         elif loss <= self.min_loss:
-            msg = f"Validation loss decreased {self.min_loss} -> {loss}"
+            self.save_model = True
+            msg = f"Early stopper, Validation loss decreased {self.min_loss} -> {loss}"
             self.min_loss = loss
             self.save_checkpoint(loss=loss, model=model)
 
             if self.verbose:
                 self.logger.info(msg) if self.logger else print(msg)
-
 
     def save_checkpoint(self, loss: float, model: "model")-> None:
         """Weight 저장

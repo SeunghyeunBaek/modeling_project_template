@@ -90,14 +90,14 @@ if __name__ == '__main__':
 
 
     model = get_model(model_str=MODEL_STR)
-    model = model(n_input=N_INPUT, n_output=N_OUTPUT)
-    model.to(device)
+    model = model(n_input=N_INPUT, n_output=N_OUTPUT).to(device)
 
     optimizer = get_optimizer(optimizer_str=OPTIMIZER_STR)
     optimizer = optimizer(model.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)
     loss_function = get_loss_function(loss_function_str=LOSS_FUNCTION_STR)
     metric_function = get_metric_function(metric_function_str=METRIC_FUNCTION_STR)
 
+    # Batch trainer
     trainer = BatchTrainer(model=model,
                            optimizer=optimizer,
                            loss_function=loss_function,
@@ -115,7 +115,7 @@ if __name__ == '__main__':
                                     weight_path=os.path.join(performance_recorder.record_dir, 'model.pth'),
                                     logger=system_logger,
                                     verbose=True)
-
+    # Performance recorder key row
     key_row_list = [EXPERIMENT_SERIAL,
                     EXPERIMENT_START_TIMESTAMP,
                     MODEL_STR, OPTIMIZER_STR,
@@ -125,18 +125,14 @@ if __name__ == '__main__':
                     BATCH_SIZE, EPOCH,
                     LEARNING_RATE,
                     MOMENTUM,
-                    RANDOM_SEED]
-                    # Records epoch_index, train_loss, validation_loss, train_score, validation_score, is_early_stop
+                    RANDOM_SEED]                    
 
     for epoch_index in range(EPOCH):
         trainer.train_batch(dataloader=train_dataloader, epoch_index=epoch_index, verbose=False)
         trainer.validate_batch(dataloader=validation_dataloader, epoch_index=epoch_index, verbose=False)
         early_stopper.check_early_stopping(loss=trainer.validation_loss_mean, model=trainer.model)
-
-        """Performance record
-
-        """
-
+                
+        # Performance record
         epoch_row_list = key_row_list + [epoch_index,
                                          trainer.train_loss_mean,
                                          trainer.validation_loss_mean,
@@ -144,11 +140,13 @@ if __name__ == '__main__':
                                          trainer.validation_score,
                                          early_stopper.stop]
         performance_recorder.add_row(epoch_row_list)
-        
+
+        # Clear epoch history
         trainer.clear_history()
-        
+
+        # Early stopping
         if early_stopper.stop:
             break
-
+        
     # Save config
     save_yaml(os.path.join(performance_recorder.record_dir, 'config.yml'), config)

@@ -1,0 +1,7 @@
+DIRECTORY:
+  data: /workspace/template_project/image_classification/data/sample10_splitted/test/
+  result: /workspace/template_project/image_classification/result/
+
+EXPERIMENT:
+  serial: DNN_20210319_075756
+

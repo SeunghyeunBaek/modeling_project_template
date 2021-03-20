@@ -1,9 +1,9 @@
 DIRECTORY:
-  original_data: /workspace/template_project/image_classification/data/original/
-  original_splitted_data: /workspace/template_project/image_classification/data/original_splitted/
+  original_data: /workspace/template_project/image_classification/data/sample10/
+  original_splitted_data: /workspace/template_project/image_classification/data/sample10_splitted/
   preprocessed_data: /workspace/template_project/image_classification/data/preprocessed/
   system_log: /workspace/template_project/image_classification/log/
-  performance_record: /workspace/template_project/image_classification/result/
+  performance_record: /workspace/template_project/image_classification/result/train/
 
 SEED:
   random_seed: 42
