@@ -1,13 +1,16 @@
 """
 
+TODO:
+    plot_performance, PerformanceRecorder 로 병함
+
 """
 
 
 from module.dataloader import ImageDataset
 from torch.utils.data import DataLoader
 
+from module.util import load_yaml, save_yaml, get_logger, plot_performance
 from module.trainer import BatchTrainer, PerformanceRecorder
-from module.util import load_yaml, save_yaml, get_logger
 from module.earlystoppers import LossEarlyStopper
 from module.metrics import get_metric_function
 from module.losses import get_loss_function
@@ -127,6 +130,7 @@ if __name__ == '__main__':
                                     weight_path=os.path.join(performance_recorder.record_dir, 'model.pth'),
                                     logger=system_logger,
                                     verbose=True)
+
     # Performance recorder key row
     key_row_list = [EXPERIMENT_SERIAL,
                     EXPERIMENT_START_TIMESTAMP,
@@ -140,6 +144,12 @@ if __name__ == '__main__':
                     RANDOM_SEED]                    
 
     # Train
+    #TODO: PerformanceRecorder 에 병합
+    train_epoch_loss_list = list()
+    train_epoch_score_list = list()
+    validation_epoch_loss_list = list()
+    validation_epoch_score_list = list()
+
     for epoch_index in range(EPOCH):
         trainer.train_batch(dataloader=train_dataloader, epoch_index=epoch_index, verbose=False)
         trainer.validate_batch(dataloader=validation_dataloader, epoch_index=epoch_index, verbose=False)
@@ -154,12 +164,35 @@ if __name__ == '__main__':
                                          early_stopper.stop]
         performance_recorder.add_row(epoch_row_list)
 
+
+
+        # For plotting
+        train_epoch_loss_list.append(trainer.train_loss_mean)
+        train_epoch_score_list.append(trainer.train_score)
+        validation_epoch_loss_list.append(trainer.validation_loss_mean)
+        validation_epoch_score_list.append(trainer.validation_score)
+
         # Clear epoch history
         trainer.clear_history()
 
         # Early stopping
         if early_stopper.stop:
+            final_epoch_index = epoch_index
             break
-        
+        else:
+            final_epoch_index
+
+
+    # Save plot
+    loss_plot = plot_performance(epoch=final_epoch_index+1,
+                                 train_history=train_epoch_loss_list, validation_history=validation_epoch_loss_list,
+                                 target='loss')
+    score_plot = plot_performance(epoch=final_epoch_index+1,
+                                  train_history=train_epoch_score_list, validation_history=validation_epoch_score_list,
+                                  target='score')
+
+    loss_plot.savefig(os.path.join(performance_recorder.record_dir, 'loss.jpg'))
+    score_plot.savefig(os.path.join(performance_recorder.record_dir, 'score.jpg'))
+
     # Save config
     save_yaml(os.path.join(performance_recorder.record_dir, 'config.yml'), config)

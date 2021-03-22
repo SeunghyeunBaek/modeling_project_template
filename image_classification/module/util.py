@@ -4,7 +4,7 @@
     * Logger
     * System
     * Seed
-
+    * Plotter
 TODO:
     * docstring 작성
 
@@ -13,6 +13,7 @@ Reference:
 """
 
 from sklearn.model_selection import train_test_split
+from matplotlib import pyplot as plt
 import numpy as np
 import logging
 import random
@@ -317,6 +318,21 @@ def split_dataset(original_data_dir: str, splitted_data_dir: str,
         logger.info(copy_msg) if logger else print(copy_msg)
 
     
+def plot_performance(epoch, train_history:list, validation_history:list, target:str):
+
+    fig = plt.figure(figsize=(12, 5))
+    epoch_range = list(range(epoch))
+
+    plt.plot(epoch_range, train_history, marker='.', c='red', label="train")
+    plt.plot(epoch_range, validation_history, marker='.', c='blue', label="validation")
+
+    plt.legend(loc='upper right')
+    plt.grid()
+    plt.xlabel('epoch')
+    plt.ylabel(target)
+
+    return fig
+
 
 if __name__ == '__main__':
     pass

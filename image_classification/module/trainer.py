@@ -12,9 +12,7 @@ import torch
 import csv
 import os
 
-
-
-
+    
 class BatchTrainer():
     """Trainer
     
@@ -31,7 +29,7 @@ class BatchTrainer():
         validation_loss_mean (float):
     """
 
-    def __init__(self, model, optimizer, loss_function, device, metric_function, logger):
+    def __init__(self, model, loss_function, device, metric_function, optimizer=None, logger=None):
         
         # Train configuration
         self.loss_function = loss_function
@@ -68,7 +66,7 @@ class BatchTrainer():
         # amp_scaler = GradScaler()
 
 
-    def train_batch(self, dataloader, epoch_index, verbose=False, logging_interval=1):
+    def train_batch(self, dataloader, epoch_index=0, verbose=False, logging_interval=1):
         
         self.model.train()
 
@@ -110,7 +108,7 @@ class BatchTrainer():
         self.logger.info(msg) if self.logger else print(msg)
         
 
-    def validate_batch(self, dataloader, epoch_index, verbose=False, logging_interval=1):
+    def validate_batch(self, dataloader, epoch_index=0, verbose=False, logging_interval=1):
 
         self.model.eval()
 
@@ -146,7 +144,6 @@ class BatchTrainer():
             
             msg = f"Epoch {epoch_index}, Validation, Mean loss: {self.validation_loss_mean}, Accuracy: {self.validation_score}"
             self.logger.info(msg) if self.logger else print(msg)
-
 
     def clear_history(self):
         """한 epoch 종료 후 history 초기화
@@ -230,16 +227,6 @@ class PerformanceRecorder():
             writer.writerow(row)
         
         self.row_counter += 1
-
-    def save_checkpoint()-> None:
-        """Weight 저장
-
-        Args:
-            loss (float): validation loss
-            model (`model`): model
-        
-        """
-        # torch.save(model.state_dict(), self.weight_path)
                          
 if __name__ == '__main__':
     pass

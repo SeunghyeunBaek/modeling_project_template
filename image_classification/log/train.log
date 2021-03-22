@@ -309,3 +309,99 @@
 2021-03-20 05:43:12,779 | train | INFO | Epoch 9, Validation, Mean loss: 0.2604060694683289, Accuracy: 0.9217391304347826
 2021-03-20 05:43:12,794 | train | INFO | Weight saved: /workspace/template_project/image_classification/result/train/DNN_20210320_054112/model.pth
 2021-03-20 05:43:12,794 | train | INFO | Early stopper, Validation loss decreased 0.26236872522133414 -> 0.2604060694683289
+2021-03-22 06:30:52,425 | train | INFO | Epoch 0, Train, Mean loss: 1.8217369370998862, Accuracy: 0.4250281848928974
+2021-03-22 06:30:55,370 | train | INFO | Epoch 0, Validation, Mean loss: 1.2373388725778331, Accuracy: 0.6811594202898551
+2021-03-22 06:30:55,388 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_063033/model.pth
+2021-03-22 06:31:03,639 | train | INFO | Epoch 1, Train, Mean loss: 0.881684609226682, Accuracy: 0.769528104364632
+2021-03-22 06:31:06,603 | train | INFO | Epoch 1, Validation, Mean loss: 0.6255366944748423, Accuracy: 0.8115942028985508
+2021-03-22 06:31:06,624 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_063033/model.pth
+2021-03-22 06:31:06,624 | train | INFO | Early stopper, Validation loss decreased 1.2373388725778331 -> 0.6255366944748423
+2021-03-22 06:31:14,622 | train | INFO | Epoch 2, Train, Mean loss: 0.5448999774016358, Accuracy: 0.8540827830568529
+2021-03-22 06:31:17,575 | train | INFO | Epoch 2, Validation, Mean loss: 0.4641517475463342, Accuracy: 0.863768115942029
+2021-03-22 06:31:17,589 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_063033/model.pth
+2021-03-22 06:31:17,590 | train | INFO | Early stopper, Validation loss decreased 0.6255366944748423 -> 0.4641517475463342
+2021-03-22 06:45:12,229 | train | INFO | Epoch 0, Train, Mean loss: 1.8217369370998862, Accuracy: 0.4250281848928974
+2021-03-22 06:45:15,416 | train | INFO | Epoch 0, Validation, Mean loss: 1.2373388725778331, Accuracy: 0.6811594202898551
+2021-03-22 06:45:15,434 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_064454/model.pth
+2021-03-22 06:45:24,121 | train | INFO | Epoch 1, Train, Mean loss: 0.881684609226682, Accuracy: 0.769528104364632
+2021-03-22 06:45:27,403 | train | INFO | Epoch 1, Validation, Mean loss: 0.6255366944748423, Accuracy: 0.8115942028985508
+2021-03-22 06:45:27,420 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_064454/model.pth
+2021-03-22 06:45:27,421 | train | INFO | Early stopper, Validation loss decreased 1.2373388725778331 -> 0.6255366944748423
+2021-03-22 06:45:35,995 | train | INFO | Epoch 2, Train, Mean loss: 0.5448999774016358, Accuracy: 0.8540827830568529
+2021-03-22 06:45:39,203 | train | INFO | Epoch 2, Validation, Mean loss: 0.4641517475463342, Accuracy: 0.863768115942029
+2021-03-22 06:45:39,223 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_064454/model.pth
+2021-03-22 06:45:39,224 | train | INFO | Early stopper, Validation loss decreased 0.6255366944748423 -> 0.4641517475463342
+2021-03-22 06:45:47,942 | train | INFO | Epoch 3, Train, Mean loss: 0.4187855436662378, Accuracy: 0.8875825414720567
+2021-03-22 06:45:51,056 | train | INFO | Epoch 3, Validation, Mean loss: 0.3946575766024382, Accuracy: 0.881159420289855
+2021-03-22 06:45:51,074 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_064454/model.pth
+2021-03-22 06:45:51,074 | train | INFO | Early stopper, Validation loss decreased 0.4641517475463342 -> 0.3946575766024382
+2021-03-22 06:45:59,425 | train | INFO | Epoch 4, Train, Mean loss: 0.3490426540446754, Accuracy: 0.9048155902721855
+2021-03-22 06:46:02,508 | train | INFO | Epoch 4, Validation, Mean loss: 0.34216488975545634, Accuracy: 0.8898550724637682
+2021-03-22 06:46:02,525 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_064454/model.pth
+2021-03-22 06:46:02,526 | train | INFO | Early stopper, Validation loss decreased 0.3946575766024382 -> 0.34216488975545634
+2021-03-22 06:46:11,190 | train | INFO | Epoch 5, Train, Mean loss: 0.3057883878004956, Accuracy: 0.9133515864068288
+2021-03-22 06:46:14,270 | train | INFO | Epoch 5, Validation, Mean loss: 0.3038646753431986, Accuracy: 0.9043478260869565
+2021-03-22 06:46:14,285 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_064454/model.pth
+2021-03-22 06:46:14,285 | train | INFO | Early stopper, Validation loss decreased 0.34216488975545634 -> 0.3038646753431986
+2021-03-22 06:46:22,228 | train | INFO | Epoch 6, Train, Mean loss: 0.2712478577367089, Accuracy: 0.9220486390723144
+2021-03-22 06:46:25,285 | train | INFO | Epoch 6, Validation, Mean loss: 0.29839744878581903, Accuracy: 0.9159420289855073
+2021-03-22 06:46:25,300 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_064454/model.pth
+2021-03-22 06:46:25,300 | train | INFO | Early stopper, Validation loss decreased 0.3038646753431986 -> 0.29839744878581903
+2021-03-22 06:46:34,104 | train | INFO | Epoch 7, Train, Mean loss: 0.24628106987274515, Accuracy: 0.9320341439845385
+2021-03-22 06:46:37,278 | train | INFO | Epoch 7, Validation, Mean loss: 0.2714650069822328, Accuracy: 0.9130434782608695
+2021-03-22 06:46:37,297 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_064454/model.pth
+2021-03-22 06:46:37,297 | train | INFO | Early stopper, Validation loss decreased 0.29839744878581903 -> 0.2714650069822328
+2021-03-22 06:46:46,036 | train | INFO | Epoch 8, Train, Mean loss: 0.22267067495941695, Accuracy: 0.9383153486873893
+2021-03-22 06:46:49,180 | train | INFO | Epoch 8, Validation, Mean loss: 0.26236872522133414, Accuracy: 0.9246376811594202
+2021-03-22 06:46:49,192 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_064454/model.pth
+2021-03-22 06:46:49,193 | train | INFO | Early stopper, Validation loss decreased 0.2714650069822328 -> 0.26236872522133414
+2021-03-22 06:46:57,956 | train | INFO | Epoch 9, Train, Mean loss: 0.20463146158564705, Accuracy: 0.9412143662425512
+2021-03-22 06:47:01,213 | train | INFO | Epoch 9, Validation, Mean loss: 0.2604060694683289, Accuracy: 0.9217391304347826
+2021-03-22 06:47:01,226 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_064454/model.pth
+2021-03-22 06:47:01,226 | train | INFO | Early stopper, Validation loss decreased 0.26236872522133414 -> 0.2604060694683289
+2021-03-22 07:00:20,878 | train | INFO | Epoch 0, Train, Mean loss: 1.8217369370998862, Accuracy: 0.4250281848928974
+2021-03-22 07:00:24,031 | train | INFO | Epoch 0, Validation, Mean loss: 1.2373388725778331, Accuracy: 0.6811594202898551
+2021-03-22 07:00:24,042 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070002/model.pth
+2021-03-22 07:01:40,800 | train | INFO | Epoch 0, Train, Mean loss: 1.8217369370998862, Accuracy: 0.4250281848928974
+2021-03-22 07:01:44,170 | train | INFO | Epoch 0, Validation, Mean loss: 1.2373388725778331, Accuracy: 0.6811594202898551
+2021-03-22 07:01:44,185 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070122/model.pth
+2021-03-22 07:03:15,266 | train | INFO | Epoch 0, Train, Mean loss: 1.8217369370998862, Accuracy: 0.4250281848928974
+2021-03-22 07:04:08,984 | train | INFO | Epoch 0, Train, Mean loss: 1.8217369370998862, Accuracy: 0.4250281848928974
+2021-03-22 07:04:11,968 | train | INFO | Epoch 0, Validation, Mean loss: 1.2373388725778331, Accuracy: 0.6811594202898551
+2021-03-22 07:04:11,981 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070350/model.pth
+2021-03-22 07:04:20,122 | train | INFO | Epoch 1, Train, Mean loss: 0.881684609226682, Accuracy: 0.769528104364632
+2021-03-22 07:04:23,164 | train | INFO | Epoch 1, Validation, Mean loss: 0.6255366944748423, Accuracy: 0.8115942028985508
+2021-03-22 07:04:23,183 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070350/model.pth
+2021-03-22 07:04:23,184 | train | INFO | Early stopper, Validation loss decreased 1.2373388725778331 -> 0.6255366944748423
+2021-03-22 07:04:31,428 | train | INFO | Epoch 2, Train, Mean loss: 0.5448999774016358, Accuracy: 0.8540827830568529
+2021-03-22 07:04:34,706 | train | INFO | Epoch 2, Validation, Mean loss: 0.4641517475463342, Accuracy: 0.863768115942029
+2021-03-22 07:04:34,717 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070350/model.pth
+2021-03-22 07:04:34,718 | train | INFO | Early stopper, Validation loss decreased 0.6255366944748423 -> 0.4641517475463342
+2021-03-22 07:04:43,054 | train | INFO | Epoch 3, Train, Mean loss: 0.4187855436662378, Accuracy: 0.8875825414720567
+2021-03-22 07:04:46,085 | train | INFO | Epoch 3, Validation, Mean loss: 0.3946575766024382, Accuracy: 0.881159420289855
+2021-03-22 07:04:46,095 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070350/model.pth
+2021-03-22 07:04:46,095 | train | INFO | Early stopper, Validation loss decreased 0.4641517475463342 -> 0.3946575766024382
+2021-03-22 07:04:54,263 | train | INFO | Epoch 4, Train, Mean loss: 0.3490426540446754, Accuracy: 0.9048155902721855
+2021-03-22 07:04:57,579 | train | INFO | Epoch 4, Validation, Mean loss: 0.34216488975545634, Accuracy: 0.8898550724637682
+2021-03-22 07:04:57,593 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070350/model.pth
+2021-03-22 07:04:57,594 | train | INFO | Early stopper, Validation loss decreased 0.3946575766024382 -> 0.34216488975545634
+2021-03-22 07:05:05,927 | train | INFO | Epoch 5, Train, Mean loss: 0.3057883878004956, Accuracy: 0.9133515864068288
+2021-03-22 07:05:10,682 | train | INFO | Epoch 5, Validation, Mean loss: 0.3038646753431986, Accuracy: 0.9043478260869565
+2021-03-22 07:05:10,699 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070350/model.pth
+2021-03-22 07:05:10,700 | train | INFO | Early stopper, Validation loss decreased 0.34216488975545634 -> 0.3038646753431986
+2021-03-22 07:05:19,252 | train | INFO | Epoch 6, Train, Mean loss: 0.2712478577367089, Accuracy: 0.9220486390723144
+2021-03-22 07:05:22,466 | train | INFO | Epoch 6, Validation, Mean loss: 0.29839744878581903, Accuracy: 0.9159420289855073
+2021-03-22 07:05:22,477 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070350/model.pth
+2021-03-22 07:05:22,477 | train | INFO | Early stopper, Validation loss decreased 0.3038646753431986 -> 0.29839744878581903
+2021-03-22 07:05:30,661 | train | INFO | Epoch 7, Train, Mean loss: 0.24628106987274515, Accuracy: 0.9320341439845385
+2021-03-22 07:05:34,070 | train | INFO | Epoch 7, Validation, Mean loss: 0.2714650069822328, Accuracy: 0.9130434782608695
+2021-03-22 07:05:34,085 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070350/model.pth
+2021-03-22 07:05:34,086 | train | INFO | Early stopper, Validation loss decreased 0.29839744878581903 -> 0.2714650069822328
+2021-03-22 07:05:42,314 | train | INFO | Epoch 8, Train, Mean loss: 0.22267067495941695, Accuracy: 0.9383153486873893
+2021-03-22 07:05:45,545 | train | INFO | Epoch 8, Validation, Mean loss: 0.26236872522133414, Accuracy: 0.9246376811594202
+2021-03-22 07:05:45,559 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070350/model.pth
+2021-03-22 07:05:45,560 | train | INFO | Early stopper, Validation loss decreased 0.2714650069822328 -> 0.26236872522133414
+2021-03-22 07:05:54,068 | train | INFO | Epoch 9, Train, Mean loss: 0.20463146158564705, Accuracy: 0.9412143662425512
+2021-03-22 07:05:57,549 | train | INFO | Epoch 9, Validation, Mean loss: 0.2604060694683289, Accuracy: 0.9217391304347826
+2021-03-22 07:05:57,567 | train | INFO | Model saved: /workspace/template_project/image_classification/result/train/DNN_20210322_070350/model.pth
+2021-03-22 07:05:57,567 | train | INFO | Early stopper, Validation loss decreased 0.26236872522133414 -> 0.2604060694683289
