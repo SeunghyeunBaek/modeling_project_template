@@ -1,8 +1,8 @@
-"""
+"""학습 스크립트
 
 TODO:
-    plot_performance, PerformanceRecorder 로 병함
-
+    * plot_performance, PerformanceRecorder 로 병합
+    * Epoch 단위 기록 PerformanceRecorder 로 병합
 """
 
 

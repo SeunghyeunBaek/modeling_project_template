@@ -7,6 +7,7 @@
     * Plotter
 TODO:
     * docstring 작성
+    * get_tpfp_mapper 이름 바꾸기
 
 Reference:    
     * set_seed: https://hoya012.github.io/blog/reproducible_pytorch/
@@ -14,6 +15,7 @@ Reference:
 
 from sklearn.model_selection import train_test_split
 from matplotlib import pyplot as plt
+from itertools import product
 import numpy as np
 import logging
 import random
@@ -333,6 +335,33 @@ def plot_performance(epoch, train_history:list, validation_history:list, target:
 
     return fig
 
+
+def get_tpfp_mapper(y_list: list, y_pred_list: list, filename_list: list)-> dict:
+    """
+    클래스별 tp fp 와 filename 매핑
+
+    Args:
+        y_list (list):
+        y_pred_list (list):
+        filename_list (list):
+
+    Returns
+        dict
+    """
+
+    tpfp_mapper_dict = dict()
+    unique_y_list = list(set(y_pred_list))
+
+    # Initiate for all key
+    for key in product(unique_y_list, repeat=2):
+        tpfp_mapper_dict[key] = list()
+
+    # Map true positive, false positive
+    for y, y_pred, filename in zip(y_list, y_pred_list, filename_list):
+        key = (y, y_pred)
+        tpfp_mapper_dict[key].append(filename)
+
+    return tpfp_mapper_dict
 
 if __name__ == '__main__':
     pass
