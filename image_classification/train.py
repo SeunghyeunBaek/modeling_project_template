@@ -176,11 +176,9 @@ if __name__ == '__main__':
         trainer.clear_history()
 
         # Early stopping
+        final_epoch_index = epoch_index
         if early_stopper.stop:
-            final_epoch_index = epoch_index
             break
-        else:
-            final_epoch_index
 
 
     # Save plot

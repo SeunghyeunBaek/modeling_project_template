@@ -1,0 +1,2 @@
+experiment_serial,experiment_timestamp,model_str,optimizer_str,loss_function_str,metric_function_str,early_stopping_patience,batch_size,epoch,learning_rate,momentum,random_seed,epoch_index,train_loss,validation_loss,train_score,validation_score,is_early_stop
+DNN_20210323_003416,20210323_003416,DNN,sgd,nll,accuracy,5,8,10,0.0001,0.5,42,0,2.304221572152542,2.3041908181231956,0.10323723626993074,0.10434782608695652,False

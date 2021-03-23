@@ -2,6 +2,7 @@
 TODO:
     * APM scaler 추가
     * metric 함수 추가 | done
+    * filename 추가 | done
 """
 
 # from torch.cuda.amp import GradScaler, autocast
@@ -31,7 +32,7 @@ class BatchTrainer():
 
     def __init__(self, model, loss_function, device, metric_function, optimizer=None, logger=None):
         
-        # Train configuration
+        # Train config
         self.loss_function = loss_function
         self.optimizer = optimizer
         self.model = model
@@ -50,8 +51,12 @@ class BatchTrainer():
         self.train_target_list = list()
         self.train_target_pred_list = list()
 
-        self.valdiation_target_list = list()
+        self.validation_target_list = list()
         self.validation_target_pred_list = list()
+
+        # History - filename
+        self.train_image_filename_list = list()
+        self.validation_image_filename_list = list()
 
         # Output
         self.train_score = 0
@@ -62,15 +67,12 @@ class BatchTrainer():
         self.validation_loss_mean = 0
         self.validation_loss_sum = 0
 
-        # AMP scaler
-        # amp_scaler = GradScaler()
-
-
     def train_batch(self, dataloader, epoch_index=0, verbose=False, logging_interval=1):
         
         self.model.train()
 
-        for batch_index, (image, target) in enumerate(dataloader):
+        # for batch_index, (image, target) in enumerate(dataloader):
+        for batch_index, (image, target, image_filename) in enumerate(dataloader):
             image, target = image.to(self.device), target.to(self.device)
 
             self.optimizer.zero_grad()
@@ -84,13 +86,18 @@ class BatchTrainer():
 
             # Metric
             target_pred_list = target_pred_proba.argmax(dim=1).cpu().tolist()
-            targe_list = target.cpu().tolist()
-            batch_score = self.metric_function(targe_list, target_pred_list)
+            target_list = target.cpu().tolist()
+            batch_score = self.metric_function(target_list, target_pred_list)
 
-            # History
-            self.train_target_list += targe_list
-            self.train_target_pred_list += target_pred_list
+            # History - loss
             self.train_batch_score_list.append(batch_score)
+
+            # History - predict
+            self.train_target_list += target_list
+            self.train_target_pred_list += target_pred_list
+
+            # History - filename
+            self.train_image_filename_list += image_filename
 
             # Update
             batch_loss_mean.backward()
@@ -107,14 +114,14 @@ class BatchTrainer():
         msg = f"Epoch {epoch_index}, Train, Mean loss: {self.train_loss_mean}, Accuracy: {self.train_score}"
         self.logger.info(msg) if self.logger else print(msg)
         
-
     def validate_batch(self, dataloader, epoch_index=0, verbose=False, logging_interval=1):
 
         self.model.eval()
 
         with torch.no_grad():
             
-            for batch_index, (image, target) in enumerate(dataloader):
+            # for batch_index, (image, target) in enumerate(dataloader):
+            for batch_index, (image, target, image_filename) in enumerate(dataloader):
                 image, target = image.to(self.device), target.to(self.device)
                 
                 # Loss
@@ -129,10 +136,15 @@ class BatchTrainer():
                 target_list = target.cpu().tolist()
                 batch_score = self.metric_function(target_list, target_pred_list)
 
-                # History
-                self.valdiation_target_list += target_list
-                self.validation_target_pred_list += target_pred_list
+                # History - loss
                 self.validation_batch_score_list.append(batch_score)
+
+                # History - predict
+                self.validation_target_list += target_list
+                self.validation_target_pred_list += target_pred_list
+
+                # History - filename
+                self.validation_image_filename_list += image_filename
 
                 # Log verbose
                 if verbose & (batch_index % logging_interval == 0):
@@ -140,7 +152,7 @@ class BatchTrainer():
                     self.logger.info(msg) if self.logger else print(msg)
 
             self.validation_loss_mean = self.validation_loss_sum / len(dataloader.dataset)
-            self.validation_score = self.metric_function(self.valdiation_target_list, self.validation_target_pred_list)
+            self.validation_score = self.metric_function(self.validation_target_list, self.validation_target_pred_list)
             
             msg = f"Epoch {epoch_index}, Validation, Mean loss: {self.validation_loss_mean}, Accuracy: {self.validation_score}"
             self.logger.info(msg) if self.logger else print(msg)
@@ -150,14 +162,13 @@ class BatchTrainer():
             
             실험 당 BatchTrainer 를 한번만 생성하기 떄문에 한 epoch 이 끝나면 history 를 반드시 초기화 해야함
             list 초기화: BatchTrainer 에서 정의한 모든 list 형태의 attribute 는 배치마다 계속 element 를 적재하는 형태로 구현
-            sum 초기화: BatchTrainer 에서 정의한 모든 _sum attribute 는 누적합계
+            sum 초기화: BatchTrainer 에서 정의한 모든 _sum attribute 는 누적 합계
 
             Examples:
                 >>for epoch_index in range(EPOCH):
                 >>    trainer.train_batch(dataloader=train_dataloader, epoch_index=epoch_index, verbose=False)
                 >>    trainer.validate_batch(dataloader=validation_dataloader, epoch_index=epoch_index, verbose=False)
-                >>    trainer.clear_history()  # 반드시 실행해야함
-                
+                >>    trainer.clear_history()
         """
 
         # History - loss
@@ -171,8 +182,12 @@ class BatchTrainer():
         self.train_target_list = list()
         self.train_target_pred_list = list()
 
-        self.valdiation_target_list = list()
+        self.validation_target_list = list()
         self.validation_target_pred_list = list()
+
+        # History - filename
+        self.train_image_filename_list = list()
+        self.validation_image_filename_list = list()
 
         # Output
         self.train_score = 0

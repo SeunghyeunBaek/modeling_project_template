@@ -90,15 +90,20 @@ if __name__ == '__main__':
     # Test
     trainer.validate_batch(dataloader=test_dataloader, verbose=False)
     
-    # Save test result
-    make_directory(PREDICT_RESULT_DIR)
-    predict_result_dict = {
-        'test_target_list': trainer.valdiation_target_list,
-        'test_target_pred_list': trainer.validation_target_pred_list,
-        'test_loss': float(trainer.validation_loss_mean),
-        'test_score': float(trainer.validation_score)
-    }
+    try:
+        # Save test result
+        make_directory(PREDICT_RESULT_DIR)
+        predict_result_dict = {
+            'test_target_list': trainer.validation_target_list,
+            'test_target_pred_list': trainer.validation_target_pred_list,
+            'test_filename_list': trainer.validation_image_filename_list,
+            'test_loss': float(trainer.validation_loss_mean),
+            'test_score': float(trainer.validation_score)
+        }
 
-    save_yaml(os.path.join(PREDICT_RESULT_DIR, 'record.yml'), predict_result_dict)
-    save_yaml(os.path.join(PREDICT_RESULT_DIR, 'train_config.yml'), train_config)
-    save_yaml(os.path.join(PREDICT_RESULT_DIR, 'predict_config.yml'), predict_config)
+        save_yaml(os.path.join(PREDICT_RESULT_DIR, 'record.yml'), predict_result_dict)
+        save_yaml(os.path.join(PREDICT_RESULT_DIR, 'train_config.yml'), train_config)
+        save_yaml(os.path.join(PREDICT_RESULT_DIR, 'predict_config.yml'), predict_config)
+        
+    except Exception as e:
+        print(f"Error {e}")

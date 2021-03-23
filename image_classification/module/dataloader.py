@@ -1,10 +1,19 @@
+"""Dataset 정의
+
+TODO:
+    image_filename 추가
+
+"""
+
 from torch.utils.data import Dataset
 from module.util import load_json
+from module_processor.preprocessor import scale, flatten
 import cv2
 import os
 
+
 class ImageDataset(Dataset):
-    """
+    """데이터셋 정의
     """
     
     def __init__ (self, image_dir: str, label_path: str):
@@ -12,25 +21,29 @@ class ImageDataset(Dataset):
         self.label_dict = load_json(label_path)
         self.image_filename_list = sorted(list(self.label_dict.keys()))
 
-
     def __len__(self):
         return len(self.label_dict.keys())
-
 
     def __getitem__(self, index: int):
         image_filename = self.image_filename_list[index]
         image_path = os.path.join(self.image_dir, image_filename)
         
         image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-        """
-        이미지 처리 연산 추가
-        """
-        image = image.reshape(-1, 784)
+        
+        # Preprocessing
+        # image = scale(image)
+        image = flatten(image)
 
         target = self.label_dict[image_filename]
 
-        return image, target
+        #return image, target
+        # item_dict = {
+        #     'image': image,
+        #     'target': target,
+        #     'image_filename': image_filename
+        # }
+        
+        return image, target, image_filename
 
-# class ImageDataLoader(DataLoader):
-#     def __init__(self):
-#        super(ImageDataLoader, self).__init__()
+if __name__ == '__main__':
+    pass
