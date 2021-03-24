@@ -19,7 +19,7 @@ TRAIN:
   n_input: 784
   n_output: 10
   batch_size: 8
-  epoch: 10
+  epoch: 20
   learning_rate: 0.0001
   momentum: 0.5
   optimizer: sgd  # SGD
@@ -35,8 +35,8 @@ DATALOADER:
 
 PERFORMANCE_RECORD:
   column_list: 
-    - experiment_serial
-    - experiment_timestamp
+    - train_serial
+    - train_timestamp
     - model_str
     - optimizer_str
     - loss_function_str

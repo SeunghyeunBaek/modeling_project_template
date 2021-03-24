@@ -60,8 +60,8 @@ MOMENTUM = config['TRAIN']['momentum']
 RANDOM_SEED = config['SEED']['random_seed']
 
 # EXPERIMENT SERIAL: {model_name}_{timestamp}
-EXPERIMENT_START_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
-EXPERIMENT_SERIAL = MODEL_STR + '_' + EXPERIMENT_START_TIMESTAMP
+TRAIN_START_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
+TRAIN_SERIAL = MODEL_STR + '_' + TRAIN_START_TIMESTAMP
 
 # PERFORMANCE_RECORD
 PERFORMANCE_RECORD_COLUMN_NAME_LIST = config['PERFORMANCE_RECORD']['column_list']
@@ -117,7 +117,7 @@ if __name__ == '__main__':
                            logger=system_logger)
 
     # Performance recorder
-    performance_recorder = PerformanceRecorder(serial=EXPERIMENT_SERIAL,
+    performance_recorder = PerformanceRecorder(serial=TRAIN_SERIAL,
                                                column_list=PERFORMANCE_RECORD_COLUMN_NAME_LIST,
                                                root_dir=PERFORMANCE_RECORD_DIR)
 
@@ -128,8 +128,8 @@ if __name__ == '__main__':
                                     verbose=True)
 
     # Performance recorder set key row
-    key_row_list = [EXPERIMENT_SERIAL,
-                    EXPERIMENT_START_TIMESTAMP,
+    key_row_list = [TRAIN_SERIAL,
+                    TRAIN_START_TIMESTAMP,
                     MODEL_STR, OPTIMIZER_STR,
                     LOSS_FUNCTION_STR,
                     METRIC_FUNCTION_STR,
@@ -152,10 +152,11 @@ if __name__ == '__main__':
                                      validation_loss=trainer.validation_loss_mean,
                                      train_score=trainer.train_score,
                                      validation_score=trainer.validation_score)
+
         # Performance record - plot
         performance_recorder.save_performance_plot(final_epoch=epoch_index)
 
-        # Clear epoch history
+        # Clear trainer epoch history
         trainer.clear_history()
         
         # Early stopping
