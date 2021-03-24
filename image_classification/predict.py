@@ -1,7 +1,7 @@
 """Predict
 
 """
-from module.util import load_yaml, get_logger, save_yaml, make_directory
+from module.util import load_yaml, get_logger, save_yaml, make_directory, get_tpfp_mapper
 from module.metrics import get_metric_function
 from module.losses import get_loss_function
 from module.dataloader import ImageDataset
@@ -98,12 +98,12 @@ if __name__ == '__main__':
             'test_target_pred_list': trainer.validation_target_pred_list,
             'test_filename_list': trainer.validation_image_filename_list,
             'test_loss': float(trainer.validation_loss_mean),
-            'test_score': float(trainer.validation_score)
+            'test_score': float(trainer.validation_score),
         }
 
         save_yaml(os.path.join(PREDICT_RESULT_DIR, 'record.yml'), predict_result_dict)
         save_yaml(os.path.join(PREDICT_RESULT_DIR, 'train_config.yml'), train_config)
         save_yaml(os.path.join(PREDICT_RESULT_DIR, 'predict_config.yml'), predict_config)
-        
+
     except Exception as e:
         print(f"Error {e}")

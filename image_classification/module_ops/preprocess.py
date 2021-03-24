@@ -8,7 +8,13 @@ def flatten(image):
     image = image.reshape(-1, 784)
     return image
 
-def do_task(image):
+def do_task(dict):
+    """
+    dict:
+        'data'
+        'config'
+    """
+    image = dict['data']
     image = scale(image)
     image = flatten(image)
-    return image
+    return dict

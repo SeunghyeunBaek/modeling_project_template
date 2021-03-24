@@ -363,8 +363,6 @@ def get_tpfp_mapper(y_list: list, y_pred_list: list, filename_list: list)-> dict
 
     return tpfp_mapper_dict
 
+
 if __name__ == '__main__':
     pass
-
-    
-
