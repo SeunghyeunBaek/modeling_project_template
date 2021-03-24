@@ -4,10 +4,6 @@
 """
 
 import os
-import sys
-PRJ_DIR = os.path.dirname(os.path.dirname(__file__))
-sys.path.append(PRJ_DIR)
-
 from module.util import sample_dataset, split_dataset
 
 ORIGINAL_DATA_DIR = '/workspace/template_project/image_classification/data/original/'

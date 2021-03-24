@@ -6,7 +6,7 @@ TODO:
 """
 
 # from torch.cuda.amp import GradScaler, autocast
-from module.util import make_directory
+from module.util import make_directory, plot_performance
 import numpy as np
 import logging
 import torch
@@ -222,16 +222,40 @@ class PerformanceRecorder():
         self.record_filepath = os.path.join(self.record_dir, 'record.csv')
 
         self.row_counter = 0
+        self.key_row_list = list()
+
+        self.train_loss_list = list()
+        self.validation_loss_list= list()
+        self.train_score_list = list()
+        self.validation_score_list = list()
+
+        self.loss_plot = None
+        self.score_plot = None
 
         make_directory(self.record_dir)
 
-    def add_row(self, row):
+    def set_key_row(self, key_row_list: list):
+        """
+        """
+        self.key_row_list = key_row_list
+
+    def add_row(self, epoch_index: int,
+                train_loss: float,
+                validation_loss: float,
+                train_score: float,
+                validation_score: float):
         """Epoch 단위 성능 적재
 
         Args:
             row (list): 
 
         """
+        self.train_loss_list.append(train_loss)
+        self.validation_loss_list.append(validation_loss)
+        self.train_score_list.append(train_score)
+        self.validation_score_list.append(validation_score)
+        
+        row = self.key_row_list + [epoch_index, train_loss, validation_loss, train_score, validation_score]
         
         with open(self.record_filepath, newline='', mode='a') as f:
             writer = csv.writer(f)
@@ -242,6 +266,22 @@ class PerformanceRecorder():
             writer.writerow(row)
         
         self.row_counter += 1
+
+    def save_performance_plot(self, final_epoch: int):
+        """Epoch 단위 loss, score plot 생성 후 저장
+
+        """
+        self.loss_plot = plot_performance(epoch=final_epoch+1,
+                                          train_history=self.train_loss_list,
+                                          validation_history=self.validation_loss_list,
+                                          target='loss')
+        self.score_plot = plot_performance(epoch=final_epoch+1,
+                                           train_history=self.train_score_list,
+                                           validation_history=self.validation_score_list,
+                                           target='score')
+
+        self.loss_plot.savefig(os.path.join(self.record_dir, 'loss.png'))
+        self.score_plot.savefig(os.path.join(self.record_dir, 'score.jpg'))
                          
 if __name__ == '__main__':
     pass

@@ -52,4 +52,3 @@ PERFORMANCE_RECORD:
     - validation_loss
     - train_score
     - validation_score
-    - is_early_stop
