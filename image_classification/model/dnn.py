@@ -52,11 +52,4 @@ class DNN(nn.Module):
         return output
 
 
-def get_model(model_str: str):
-
-    model = None
-
-    if model_str == 'DNN':
-        model = DNN
-
-    return model
+ 

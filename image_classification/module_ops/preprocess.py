@@ -1,3 +1,7 @@
+"""
+TODO:
+    수정필요
+"""
 
 def scale(image):
     min_pixel, max_pixel = image.min(), image.max()

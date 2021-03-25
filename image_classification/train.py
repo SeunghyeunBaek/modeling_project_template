@@ -15,7 +15,8 @@ from module.earlystoppers import LossEarlyStopper
 from module.metrics import get_metric_function
 from module.losses import get_loss_function
 from module.optimizer import get_optimizer
-from model.model import get_model, DNN
+
+from model import get_model
 
 from datetime import datetime
 import numpy as np
@@ -44,6 +45,8 @@ DROP_LAST = config['DATALOADER']['drop_last']
 
 # TRAIN
 MODEL_STR = 'DNN'
+exec("from model import {}".format(MODEL_STR))
+
 N_INPUT = config['TRAIN']['n_input']
 N_OUTPUT = config['TRAIN']['n_output']
 OPTIMIZER_STR = config['TRAIN']['optimizer']
@@ -78,8 +81,28 @@ if __name__ == '__main__':
     # Set device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-    # Set system logger
-    system_logger = get_logger(name='train', file_path=SYSTEM_LOGGER_PATH)
+
+    # Set performance_recorder: 성능을 기록하는 객체
+    performance_recorder = PerformanceRecorder(serial=TRAIN_SERIAL,
+                                               column_list=PERFORMANCE_RECORD_COLUMN_NAME_LIST,
+                                               root_dir=PERFORMANCE_RECORD_DIR)
+
+    # Performance recorder set key row: csv 키값 등록
+    key_row_list = [TRAIN_SERIAL,
+                    TRAIN_START_TIMESTAMP,
+                    MODEL_STR, OPTIMIZER_STR,
+                    LOSS_FUNCTION_STR,
+                    METRIC_FUNCTION_STR,
+                    EARLY_STOPPING_PATIENCE,
+                    BATCH_SIZE, EPOCH,
+                    LEARNING_RATE,
+                    MOMENTUM,
+                    RANDOM_SEED]                                   
+    performance_recorder.set_key_row(key_row_list=key_row_list)
+
+    # Set system logger: 로거 객체
+    system_logger = get_logger(name='train',
+                               file_path=os.path.join(performance_recorder.record_dir, 'train_log.log'))
 
     # Load data
     train_dataset = ImageDataset(image_dir=os.path.join(TRAIN_DATA_DIR, 'image/'),
@@ -116,29 +139,11 @@ if __name__ == '__main__':
                            device=device,
                            logger=system_logger)
 
-    # Performance recorder
-    performance_recorder = PerformanceRecorder(serial=TRAIN_SERIAL,
-                                               column_list=PERFORMANCE_RECORD_COLUMN_NAME_LIST,
-                                               root_dir=PERFORMANCE_RECORD_DIR)
-
     # Early stopper
     early_stopper = LossEarlyStopper(patience=EARLY_STOPPING_PATIENCE,
                                     weight_path=os.path.join(performance_recorder.record_dir, 'model.pth'),
                                     logger=system_logger,
                                     verbose=True)
-
-    # Performance recorder set key row
-    key_row_list = [TRAIN_SERIAL,
-                    TRAIN_START_TIMESTAMP,
-                    MODEL_STR, OPTIMIZER_STR,
-                    LOSS_FUNCTION_STR,
-                    METRIC_FUNCTION_STR,
-                    EARLY_STOPPING_PATIENCE,
-                    BATCH_SIZE, EPOCH,
-                    LEARNING_RATE,
-                    MOMENTUM,
-                    RANDOM_SEED]               
-    performance_recorder.set_key_row(key_row_list=key_row_list)
 
     # Train
     for epoch_index in range(EPOCH):
