@@ -6,8 +6,8 @@ TODO:
 """
 
 from torch.utils.data import Dataset
-from module.util import load_json
-from module_processor.preprocessor import scale, flatten
+from modules.utils import load_json
+#from module_processor.preprocessor import scale, flatten
 import cv2
 import os
 
@@ -32,7 +32,8 @@ class ImageDataset(Dataset):
         
         # Preprocessing
         # image = scale(image)
-        image = flatten(image)
+        # image = flatten(image)
+        image = image.reshape(-1, 784)
 
         target = self.label_dict[image_filename]
 

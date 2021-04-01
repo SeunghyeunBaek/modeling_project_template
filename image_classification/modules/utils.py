@@ -24,6 +24,7 @@ import shutil
 import torch
 import json
 import yaml
+import csv
 import os
 
 """
@@ -70,7 +71,7 @@ def save_yaml(path, obj):
 	
 	with open(path, 'w') as f:
 
-		yaml.dump(obj, f)
+		yaml.dump(obj, f, sort_keys=False)
 		
 
 def load_yaml(path):
@@ -83,7 +84,7 @@ def load_yaml(path):
 """
 Logger
 """
-def get_logger(name: str, file_path: str)-> logging.RootLogger:
+def get_logger(name: str, file_path: str, stream=False)-> logging.RootLogger:
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
@@ -95,7 +96,8 @@ def get_logger(name: str, file_path: str)-> logging.RootLogger:
     stream_handler.setFormatter(formatter)
     file_handler.setFormatter(formatter)
 
-    logger.addHandler(stream_handler)
+    if stream:
+        logger.addHandler(stream_handler)
     logger.addHandler(file_handler)
 
     return logger
@@ -156,7 +158,6 @@ def make_directory(directory: str)-> str:
     except OSError as e:
         msg = f"Fail to create directory {directory} {e}"
 
-    print(msg)
     return msg
 
 
@@ -363,6 +364,14 @@ def get_tpfp_mapper(y_list: list, y_pred_list: list, filename_list: list)-> dict
 
     return tpfp_mapper_dict
 
+
+def count_csv_row(path):
+    
+    with open(path, 'r') as f:
+        reader = csv.reader(f)
+        n_row = sum(1 for row in reader)
+
+    return n_row
 
 if __name__ == '__main__':
     pass

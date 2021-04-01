@@ -1,9 +1,9 @@
 DIRECTORY:
-  original_data: /workspace/template_project/image_classification/data/sample10/
-  original_splitted_data: /workspace/template_project/image_classification/data/sample10_splitted/
+  original_data: /workspace/template_project/image_classification/data/original/
+  original_splitted_data: /workspace/template_project/image_classification/data/original_splitted/
   preprocessed_data: /workspace/template_project/image_classification/data/preprocessed/
-  system_log: /workspace/template_project/image_classification/log/
-  performance_record: /workspace/template_project/image_classification/result/train/
+  # system_log: /workspace/template_project/image_classification/log/  -- deprecated
+  performance_record: /workspace/template_project/image_classification/results/train/
 
 SEED:
   random_seed: 42
@@ -19,7 +19,7 @@ TRAIN:
   n_input: 784
   n_output: 10
   batch_size: 8
-  epoch: 20
+  epoch: 30
   learning_rate: 0.0001
   momentum: 0.5
   optimizer: sgd  # SGD
@@ -46,8 +46,8 @@ PERFORMANCE_RECORD:
     - epoch
     - learning_rate
     - momentum
-    - random_seed
-    - epoch_index
+    - random_seed # -----------key columns-------------
+    - epoch_index 
     - train_loss
     - validation_loss
     - train_score

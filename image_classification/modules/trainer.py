@@ -6,7 +6,6 @@ TODO:
 """
 
 # from torch.cuda.amp import GradScaler, autocast
-from module.util import make_directory, plot_performance
 import numpy as np
 import logging
 import torch
@@ -83,7 +82,7 @@ class BatchTrainer():
             batch_loss_sum = batch_loss_mean.item() * len(image)
             self.train_batch_loss_mean_list.append(batch_loss_mean)
             self.train_loss_sum += batch_loss_sum
-
+            
             # Metric
             target_pred_list = target_pred_proba.argmax(dim=1).cpu().tolist()
             target_list = target.cpu().tolist()
@@ -197,91 +196,6 @@ class BatchTrainer():
         self.validation_score = 0
         self.validation_loss_mean = 0
         self.validation_loss_sum = 0
-
-
-class PerformanceRecorder():
-
-    def __init__(self, serial: str, column_list: list, root_dir: str):
-        """Recorder 초기화
-            
-        Args:
-            serial (str):
-            column_list (str):
-            root_dir (str):
-            record_dir (str):
-
-        Note:
-            Instance 생성 시 dir + serial/ 로 경로 생성
-
-        """
-        self.serial = serial
-        self.column_list = column_list
-        
-        self.root_dir = root_dir
-        self.record_dir = os.path.join(self.root_dir, self.serial)
-        self.record_filepath = os.path.join(self.record_dir, 'record.csv')
-
-        self.row_counter = 0
-        self.key_row_list = list()
-
-        self.train_loss_list = list()
-        self.validation_loss_list= list()
-        self.train_score_list = list()
-        self.validation_score_list = list()
-
-        self.loss_plot = None
-        self.score_plot = None
-
-        make_directory(self.record_dir)
-
-    def set_key_row(self, key_row_list: list):
-        """
-        """
-        self.key_row_list = key_row_list
-
-    def add_row(self, epoch_index: int,
-                train_loss: float,
-                validation_loss: float,
-                train_score: float,
-                validation_score: float):
-        """Epoch 단위 성능 적재
-
-        Args:
-            row (list): 
-
-        """
-        self.train_loss_list.append(train_loss)
-        self.validation_loss_list.append(validation_loss)
-        self.train_score_list.append(train_score)
-        self.validation_score_list.append(validation_score)
-        
-        row = self.key_row_list + [epoch_index, train_loss, validation_loss, train_score, validation_score]
-        
-        with open(self.record_filepath, newline='', mode='a') as f:
-            writer = csv.writer(f)
-
-            if self.row_counter == 0:
-                writer.writerow(self.column_list)
-
-            writer.writerow(row)
-        
-        self.row_counter += 1
-
-    def save_performance_plot(self, final_epoch: int):
-        """Epoch 단위 loss, score plot 생성 후 저장
-
-        """
-        self.loss_plot = plot_performance(epoch=final_epoch+1,
-                                          train_history=self.train_loss_list,
-                                          validation_history=self.validation_loss_list,
-                                          target='loss')
-        self.score_plot = plot_performance(epoch=final_epoch+1,
-                                           train_history=self.train_score_list,
-                                           validation_history=self.validation_score_list,
-                                           target='score')
-
-        self.loss_plot.savefig(os.path.join(self.record_dir, 'loss.png'))
-        self.score_plot.savefig(os.path.join(self.record_dir, 'score.jpg'))
                          
 if __name__ == '__main__':
     pass

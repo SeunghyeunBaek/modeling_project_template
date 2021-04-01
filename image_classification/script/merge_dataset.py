@@ -1,5 +1,5 @@
+from module.utils import save_json
 from shutil import copy
-from util import save_json
 from glob import glob
 import os
 

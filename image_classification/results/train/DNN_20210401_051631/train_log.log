@@ -1,0 +1,95 @@
+2021-04-01 05:17:11,518 | train | INFO | Epoch 0, Train, Mean loss: 0.5642514043870205, Accuracy: 0.8326193390452876
+2021-04-01 05:17:13,040 | train | INFO | Epoch 0, Validation, Mean loss: 0.25007614734920036, Accuracy: 0.9249275362318841
+2021-04-01 05:17:13,040 | train | INFO | Write row 0
+2021-04-01 05:17:13,046 | train | INFO | Model saved: /workspace/template_project/image_classification/results/train/DNN_20210401_051631/model.pt
+2021-04-01 05:17:13,046 | train | INFO | Update best record row 1, check point sinf -> 0.25007614734920036
+2021-04-01 05:17:13,298 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:17:54,276 | train | INFO | Epoch 1, Train, Mean loss: 0.22499092385625336, Accuracy: 0.9344198930619081
+2021-04-01 05:17:55,744 | train | INFO | Epoch 1, Validation, Mean loss: 0.1743343351713881, Accuracy: 0.9478260869565217
+2021-04-01 05:17:55,745 | train | INFO | Early stopper, Validation loss decreased 0.25007614734920036 -> 0.1743343351713881
+2021-04-01 05:17:55,745 | train | INFO | Write row 1
+2021-04-01 05:17:55,754 | train | INFO | Model saved: /workspace/template_project/image_classification/results/train/DNN_20210401_051631/model.pt
+2021-04-01 05:17:55,754 | train | INFO | Update best record row 2, check point s0.25007614734920036 -> 0.1743343351713881
+2021-04-01 05:17:56,083 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:18:34,307 | train | INFO | Epoch 2, Train, Mean loss: 0.17077337997548286, Accuracy: 0.9503961863041938
+2021-04-01 05:18:35,722 | train | INFO | Epoch 2, Validation, Mean loss: 0.1527473434691142, Accuracy: 0.9542028985507246
+2021-04-01 05:18:35,722 | train | INFO | Early stopper, Validation loss decreased 0.1743343351713881 -> 0.1527473434691142
+2021-04-01 05:18:35,723 | train | INFO | Write row 2
+2021-04-01 05:18:35,729 | train | INFO | Model saved: /workspace/template_project/image_classification/results/train/DNN_20210401_051631/model.pt
+2021-04-01 05:18:35,729 | train | INFO | Update best record row 3, check point s0.1743343351713881 -> 0.1527473434691142
+2021-04-01 05:18:35,950 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:19:13,538 | train | INFO | Epoch 3, Train, Mean loss: 0.13785682584026393, Accuracy: 0.9601720028345037
+2021-04-01 05:19:15,063 | train | INFO | Epoch 3, Validation, Mean loss: 0.12325766879687275, Accuracy: 0.9605797101449275
+2021-04-01 05:19:15,064 | train | INFO | Early stopper, Validation loss decreased 0.1527473434691142 -> 0.12325766879687275
+2021-04-01 05:19:15,064 | train | INFO | Write row 3
+2021-04-01 05:19:15,073 | train | INFO | Model saved: /workspace/template_project/image_classification/results/train/DNN_20210401_051631/model.pt
+2021-04-01 05:19:15,073 | train | INFO | Update best record row 4, check point s0.1527473434691142 -> 0.12325766879687275
+2021-04-01 05:19:15,313 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:19:53,307 | train | INFO | Epoch 4, Train, Mean loss: 0.11562952898428691, Accuracy: 0.9661792179346775
+2021-04-01 05:19:54,767 | train | INFO | Epoch 4, Validation, Mean loss: 0.1154378090351415, Accuracy: 0.9640579710144928
+2021-04-01 05:19:54,767 | train | INFO | Early stopper, Validation loss decreased 0.12325766879687275 -> 0.1154378090351415
+2021-04-01 05:19:54,768 | train | INFO | Write row 4
+2021-04-01 05:19:54,774 | train | INFO | Model saved: /workspace/template_project/image_classification/results/train/DNN_20210401_051631/model.pt
+2021-04-01 05:19:54,774 | train | INFO | Update best record row 5, check point s0.12325766879687275 -> 0.1154378090351415
+2021-04-01 05:19:55,007 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:20:32,128 | train | INFO | Epoch 5, Train, Mean loss: 0.09797944094802352, Accuracy: 0.9715905430651292
+2021-04-01 05:20:33,658 | train | INFO | Epoch 5, Validation, Mean loss: 0.10718603232049381, Accuracy: 0.9692753623188406
+2021-04-01 05:20:33,658 | train | INFO | Early stopper, Validation loss decreased 0.1154378090351415 -> 0.10718603232049381
+2021-04-01 05:20:33,658 | train | INFO | Write row 5
+2021-04-01 05:20:33,666 | train | INFO | Model saved: /workspace/template_project/image_classification/results/train/DNN_20210401_051631/model.pt
+2021-04-01 05:20:33,666 | train | INFO | Update best record row 6, check point s0.1154378090351415 -> 0.10718603232049381
+2021-04-01 05:20:33,916 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:21:11,567 | train | INFO | Epoch 6, Train, Mean loss: 0.08497960196288352, Accuracy: 0.9750531469432455
+2021-04-01 05:21:12,990 | train | INFO | Epoch 6, Validation, Mean loss: 0.09511812711107558, Accuracy: 0.9686956521739131
+2021-04-01 05:21:12,991 | train | INFO | Early stopper, Validation loss decreased 0.10718603232049381 -> 0.09511812711107558
+2021-04-01 05:21:12,991 | train | INFO | Write row 6
+2021-04-01 05:21:13,000 | train | INFO | Model saved: /workspace/template_project/image_classification/results/train/DNN_20210401_051631/model.pt
+2021-04-01 05:21:13,000 | train | INFO | Update best record row 7, check point s0.10718603232049381 -> 0.09511812711107558
+2021-04-01 05:21:13,366 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:21:51,693 | train | INFO | Epoch 7, Train, Mean loss: 0.07405691019114112, Accuracy: 0.9781131224634414
+2021-04-01 05:21:53,105 | train | INFO | Epoch 7, Validation, Mean loss: 0.08922275053472191, Accuracy: 0.9689855072463768
+2021-04-01 05:21:53,105 | train | INFO | Early stopper, Validation loss decreased 0.09511812711107558 -> 0.08922275053472191
+2021-04-01 05:21:53,106 | train | INFO | Write row 7
+2021-04-01 05:21:53,115 | train | INFO | Model saved: /workspace/template_project/image_classification/results/train/DNN_20210401_051631/model.pt
+2021-04-01 05:21:53,116 | train | INFO | Update best record row 8, check point s0.09511812711107558 -> 0.08922275053472191
+2021-04-01 05:21:53,374 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:22:30,505 | train | INFO | Epoch 8, Train, Mean loss: 0.06465451260786075, Accuracy: 0.9808993107002513
+2021-04-01 05:22:31,993 | train | INFO | Epoch 8, Validation, Mean loss: 0.08843881477298134, Accuracy: 0.9718840579710145
+2021-04-01 05:22:31,993 | train | INFO | Early stopper, Validation loss decreased 0.08922275053472191 -> 0.08843881477298134
+2021-04-01 05:22:31,994 | train | INFO | Write row 8
+2021-04-01 05:22:32,000 | train | INFO | Model saved: /workspace/template_project/image_classification/results/train/DNN_20210401_051631/model.pt
+2021-04-01 05:22:32,000 | train | INFO | Update best record row 9, check point s0.08922275053472191 -> 0.08843881477298134
+2021-04-01 05:22:32,256 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:23:10,117 | train | INFO | Epoch 9, Train, Mean loss: 0.05598351979762117, Accuracy: 0.983250660310507
+2021-04-01 05:23:11,619 | train | INFO | Epoch 9, Validation, Mean loss: 0.08905695818882584, Accuracy: 0.9695652173913043
+2021-04-01 05:23:11,619 | train | INFO | Early stopper, Early stopping counter 1/5
+2021-04-01 05:23:11,620 | train | INFO | Write row 9
+2021-04-01 05:23:11,888 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:23:49,381 | train | INFO | Epoch 10, Train, Mean loss: 0.0494481484079863, Accuracy: 0.98566643045803
+2021-04-01 05:23:50,992 | train | INFO | Epoch 10, Validation, Mean loss: 0.08898355010340152, Accuracy: 0.9695652173913043
+2021-04-01 05:23:50,992 | train | INFO | Early stopper, Early stopping counter 2/5
+2021-04-01 05:23:50,993 | train | INFO | Write row 10
+2021-04-01 05:23:51,275 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:24:30,573 | train | INFO | Epoch 11, Train, Mean loss: 0.04271341389923064, Accuracy: 0.9874863106358307
+2021-04-01 05:24:32,782 | train | INFO | Epoch 11, Validation, Mean loss: 0.07755079982112216, Accuracy: 0.9739130434782609
+2021-04-01 05:24:32,782 | train | INFO | Early stopper, Validation loss decreased 0.08843881477298134 -> 0.07755079982112216
+2021-04-01 05:24:32,782 | train | INFO | Write row 11
+2021-04-01 05:24:32,789 | train | INFO | Model saved: /workspace/template_project/image_classification/results/train/DNN_20210401_051631/model.pt
+2021-04-01 05:24:32,789 | train | INFO | Update best record row 12, check point s0.08843881477298134 -> 0.07755079982112216
+2021-04-01 05:24:33,061 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:25:12,216 | train | INFO | Epoch 12, Train, Mean loss: 0.03772556377150326, Accuracy: 0.9895638729627005
+2021-04-01 05:25:13,907 | train | INFO | Epoch 12, Validation, Mean loss: 0.08197446337066984, Accuracy: 0.9733333333333334
+2021-04-01 05:25:13,908 | train | INFO | Early stopper, Early stopping counter 3/5
+2021-04-01 05:25:13,908 | train | INFO | Write row 12
+2021-04-01 05:25:14,200 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:25:53,229 | train | INFO | Epoch 13, Train, Mean loss: 0.032882865845346755, Accuracy: 0.9913354377375507
+2021-04-01 05:25:54,891 | train | INFO | Epoch 13, Validation, Mean loss: 0.07955985214880101, Accuracy: 0.9756521739130435
+2021-04-01 05:25:54,891 | train | INFO | Early stopper, Early stopping counter 4/5
+2021-04-01 05:25:54,892 | train | INFO | Write row 13
+2021-04-01 05:25:55,177 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:26:34,909 | train | INFO | Epoch 14, Train, Mean loss: 0.02801721275751407, Accuracy: 0.9927526895574309
+2021-04-01 05:26:36,584 | train | INFO | Epoch 14, Validation, Mean loss: 0.08929950021627862, Accuracy: 0.9704347826086956
+2021-04-01 05:26:36,585 | train | INFO | Early stopper, Early stopping counter 5/5
+2021-04-01 05:26:36,585 | train | INFO | Write row 14
+2021-04-01 05:26:36,889 | train | INFO | Save performance plot /workspace/template_project/image_classification/results/train/DNN_20210401_051631
+2021-04-01 05:26:37,085 | train | INFO | Save best record /workspace/template_project/image_classification/results/train/train_best_record.csv

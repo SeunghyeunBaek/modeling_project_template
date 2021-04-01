@@ -1,7 +1,8 @@
 """Early stopping 클래스 정의
 
 TODO:
-    * loss가 증가하는 방향으로 학습 시 옵션 설정
+    * loss가 증가하는 방향으로 학습 시 옵션 설정 | 함수 따로 생성
+    * Docstring 작성
 """
 import numpy as np
 import logging
@@ -10,7 +11,7 @@ import torch
 class LossEarlyStopper():
     """Early stoppiing 여부 판단
         최소 loss 저장
-        현재 epoch loss가 최소 loss 보다 작을 경우 모델 저장(save_checkpoint)
+        현재 epoch loss가 최소 loss 보다 작을 경우 모델 저장(save_checkpoint) -- deprecated: Performace recorder 로 옮김
     
     Attributes:
         patience (int): loss가 줄어들지 않아도 학습할 epoch 수
@@ -23,7 +24,7 @@ class LossEarlyStopper():
 
     """
 
-    def __init__(self, patience: int, weight_path:str, verbose: bool, logger:logging.RootLogger=None)-> None:
+    def __init__(self, patience: int, verbose: bool, logger:logging.RootLogger=None)-> None:
         """ 초기화
         
         Args:
@@ -33,21 +34,20 @@ class LossEarlyStopper():
 
         """
         self.patience = patience
-        self.weight_path = weight_path
         self.verbose = verbose
 
         self.patience_counter = 0
         self.min_loss = np.Inf
         self.logger = logger
         self.stop = False
-        self.save_model = False
+        # self.save_model = False
 
-    def check_early_stopping(self, loss: float, model: "model")-> None:
+    def check_early_stopping(self, loss: float)-> None:
         """Early stopping 여부 판단
 
         Args:
             loss (float):
-            model (`model`):
+            model (`model`): Deprecated
 
         Examples:
             
@@ -57,7 +57,7 @@ class LossEarlyStopper():
 
         if self.min_loss == np.Inf:
             self.min_loss = loss
-            self.save_checkpoint(loss=loss, model=model)
+            # self.save_checkpoint(loss=loss, model=model)
 
         elif loss > self.min_loss:
             self.patience_counter += 1
@@ -73,27 +73,7 @@ class LossEarlyStopper():
             self.save_model = True
             msg = f"Early stopper, Validation loss decreased {self.min_loss} -> {loss}"
             self.min_loss = loss
-            self.save_checkpoint(loss=loss, model=model)
+            # self.save_checkpoint(loss=loss, model=model)
 
             if self.verbose:
                 self.logger.info(msg) if self.logger else print(msg)
-
-    def save_checkpoint(self, loss: float, model: "model")-> None:
-        """Weight 저장
-
-        Args:
-            loss (float): validation loss
-            model (`model`): model
-        
-        """
-        # check_point = {
-        #     'model': model.state_dict(),
-        #     'optimizer': optimizer.state_dict(),
-        # }
-        msg = f"Model saved: {self.weight_path}"
-
-        torch.save(model.state_dict(), self.weight_path)
-        self.min_loss = loss
-
-        if self.verbose:
-            self.logger.info(msg) if self.logger else print(msg)

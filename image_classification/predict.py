@@ -3,13 +3,13 @@
 TODO:
     Docstring 작성
 """
-from module.util import load_yaml, get_logger, save_yaml, make_directory, get_tpfp_mapper
-from module.metrics import get_metric_function
-from module.losses import get_loss_function
-from module.dataloader import ImageDataset
-from module.trainer import BatchTrainer
-from model.model import get_model, DNN
+from modules.utils import load_yaml, get_logger, save_yaml, make_directory, get_tpfp_mapper
+from modules.metrics import get_metric_function
+from modules.losses import get_loss_function
+from modules.datasets import ImageDataset
+from modules.trainer import BatchTrainer
 
+from models.utils import get_model
 
 from torch.utils.data import DataLoader
 from datetime import datetime
@@ -34,7 +34,7 @@ RESULT_DIR = predict_config['DIRECTORY']['result']
 TRAIN_RESULT_DIR = os.path.join(os.path.join(RESULT_DIR, 'train'), EXPERIMENT_SERIAL)
 PREDICT_RESULT_DIR = os.path.join(os.path.join(RESULT_DIR, 'predict'), PREDICT_SERIAL)
 
-TRAIN_CONFIG_DIR = os.path.join(TRAIN_RESULT_DIR, 'config.yml')
+TRAIN_CONFIG_DIR = os.path.join(TRAIN_RESULT_DIR, 'train_config.yml')
 MODEL_PATH = os.path.join(TRAIN_RESULT_DIR, 'model.pth')
 
 # DATALOADER
@@ -92,20 +92,16 @@ if __name__ == '__main__':
     # Test
     trainer.validate_batch(dataloader=test_dataloader, verbose=False)
     
-    try:
-        # Save test result
-        make_directory(PREDICT_RESULT_DIR)
-        predict_result_dict = {
-            'test_target_list': trainer.validation_target_list,
-            'test_target_pred_list': trainer.validation_target_pred_list,
-            'test_filename_list': trainer.validation_image_filename_list,
-            'test_loss': float(trainer.validation_loss_mean),
-            'test_score': float(trainer.validation_score),
-        }
+    # Save test result
+    make_directory(PREDICT_RESULT_DIR)
+    predict_result_dict = {
+        'test_target_list': trainer.validation_target_list,
+        'test_target_pred_list': trainer.validation_target_pred_list,
+        'test_filename_list': trainer.validation_image_filename_list,
+        'test_loss': float(trainer.validation_loss_mean),
+        'test_score': float(trainer.validation_score),
+    }
 
-        save_yaml(os.path.join(PREDICT_RESULT_DIR, 'record.yml'), predict_result_dict)
-        save_yaml(os.path.join(PREDICT_RESULT_DIR, 'train_config.yml'), train_config)
-        save_yaml(os.path.join(PREDICT_RESULT_DIR, 'predict_config.yml'), predict_config)
-
-    except Exception as e:
-        print(f"Error {e}")
+    save_yaml(os.path.join(PREDICT_RESULT_DIR, 'record.yml'), predict_result_dict)
+    save_yaml(os.path.join(PREDICT_RESULT_DIR, 'train_config.yml'), train_config)
+    save_yaml(os.path.join(PREDICT_RESULT_DIR, 'predict_config.yml'), predict_config)

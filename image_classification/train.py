@@ -3,22 +3,27 @@
 TODO:
     * plot_performance, PerformanceRecorder 로 병합 | Done
     * Epoch 단위 기록 PerformanceRecorder 로 병합 | Done
+    * Best train recored 기록 스크립트 작성 | Done
+    * Early stopping save model -> performance recorder | Done
+    * Performance recorder result directory 생성 함수 train.py 이동 | Done
     * Docstring 작성
 """
 
-from module.dataloader import ImageDataset
+from modules.utils import load_yaml, save_yaml, get_logger, make_directory
+from modules.earlystoppers import LossEarlyStopper
+from modules.recorders import PerformanceRecorder
+from modules.metrics import get_metric_function
+from modules.losses import get_loss_function
+from modules.optimizers import get_optimizer
+from modules.datasets import ImageDataset
+from modules.trainer import BatchTrainer
+from models.utils import get_model
+from models.dnn import DNN
+
 from torch.utils.data import DataLoader
 
-from module.util import load_yaml, save_yaml, get_logger, plot_performance
-from module.trainer import BatchTrainer, PerformanceRecorder
-from module.earlystoppers import LossEarlyStopper
-from module.metrics import get_metric_function
-from module.losses import get_loss_function
-from module.optimizer import get_optimizer
-
-from model import get_model
-
 from datetime import datetime
+from tqdm import tqdm
 import numpy as np
 import random
 import os
@@ -35,7 +40,6 @@ config = load_yaml(TRAIN_CONFIG_PATH)
 DATA_DIR = config['DIRECTORY']['original_splitted_data']
 TRAIN_DATA_DIR = os.path.join(DATA_DIR, 'train')
 VALIDATION_DATA_DIR = os.path.join(DATA_DIR, 'validation')
-PERFORMANCE_RECORD_DIR = config['DIRECTORY']['performance_record']
 
 # DATALOADER
 NUM_WORKERS = config['DATALOADER']['num_workers']
@@ -44,9 +48,7 @@ PIN_MEMORY = config['DATALOADER']['pin_memory']
 DROP_LAST = config['DATALOADER']['drop_last']
 
 # TRAIN
-MODEL_STR = 'DNN'
-exec("from model import {}".format(MODEL_STR))
-
+MODEL_STR = config['TRAIN']['model']
 N_INPUT = config['TRAIN']['n_input']
 N_OUTPUT = config['TRAIN']['n_output']
 OPTIMIZER_STR = config['TRAIN']['optimizer']
@@ -62,12 +64,13 @@ MOMENTUM = config['TRAIN']['momentum']
 # SEED
 RANDOM_SEED = config['SEED']['random_seed']
 
-# EXPERIMENT SERIAL: {model_name}_{timestamp}
+# TRAIN SERIAL: {model_name}_{timestamp}
 TRAIN_START_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
 TRAIN_SERIAL = MODEL_STR + '_' + TRAIN_START_TIMESTAMP
 
 # PERFORMANCE_RECORD
 PERFORMANCE_RECORD_COLUMN_NAME_LIST = config['PERFORMANCE_RECORD']['column_list']
+PERFORMANCE_RECORD_DIR = os.path.join(config['DIRECTORY']['performance_record'], TRAIN_SERIAL)
 
 if __name__ == '__main__':
 
@@ -81,35 +84,20 @@ if __name__ == '__main__':
     # Set device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
-
-    # Set performance_recorder: 성능을 기록하는 객체
-    performance_recorder = PerformanceRecorder(serial=TRAIN_SERIAL,
-                                               column_list=PERFORMANCE_RECORD_COLUMN_NAME_LIST,
-                                               root_dir=PERFORMANCE_RECORD_DIR)
-
-    # Performance recorder set key row: csv 키값 등록
-    key_row_list = [TRAIN_SERIAL,
-                    TRAIN_START_TIMESTAMP,
-                    MODEL_STR, OPTIMIZER_STR,
-                    LOSS_FUNCTION_STR,
-                    METRIC_FUNCTION_STR,
-                    EARLY_STOPPING_PATIENCE,
-                    BATCH_SIZE, EPOCH,
-                    LEARNING_RATE,
-                    MOMENTUM,
-                    RANDOM_SEED]                                   
-    performance_recorder.set_key_row(key_row_list=key_row_list)
+    # Set train result directory
+    make_directory(PERFORMANCE_RECORD_DIR)
 
     # Set system logger: 로거 객체
     system_logger = get_logger(name='train',
-                               file_path=os.path.join(performance_recorder.record_dir, 'train_log.log'))
+                               file_path=os.path.join(PERFORMANCE_RECORD_DIR, 'train_log.log'))
 
-    # Load data
+    # Load dataset
     train_dataset = ImageDataset(image_dir=os.path.join(TRAIN_DATA_DIR, 'image/'),
                                  label_path=os.path.join(TRAIN_DATA_DIR, 'label.json'))
     validation_dataset = ImageDataset(image_dir=os.path.join(VALIDATION_DATA_DIR, 'image/'),
                                       label_path=os.path.join(VALIDATION_DATA_DIR, 'label.json'))
 
+    # Load dataloader
     train_dataloader = DataLoader(dataset=train_dataset,
                                   batch_size=BATCH_SIZE,
                                   num_workers=NUM_WORKERS, 
@@ -121,7 +109,6 @@ if __name__ == '__main__':
                                         shuffle=SHUFFLE,
                                         pin_memory=PIN_MEMORY)
 
-    # Load model architecture
     model = get_model(model_str=MODEL_STR)
     model = model(n_input=N_INPUT, n_output=N_OUTPUT).to(device)
 
@@ -141,15 +128,35 @@ if __name__ == '__main__':
 
     # Early stopper
     early_stopper = LossEarlyStopper(patience=EARLY_STOPPING_PATIENCE,
-                                    weight_path=os.path.join(performance_recorder.record_dir, 'model.pth'),
-                                    logger=system_logger,
-                                    verbose=True)
+                                     logger=system_logger,
+                                     verbose=True)
 
+    # Set performance_recorder: 성능을 기록하는 객체
+    key_column_value_list = [
+        TRAIN_SERIAL,
+        TRAIN_START_TIMESTAMP,
+        MODEL_STR,
+        OPTIMIZER_STR,
+        LOSS_FUNCTION_STR,
+        METRIC_FUNCTION_STR,
+        EARLY_STOPPING_PATIENCE,
+        BATCH_SIZE,
+        EPOCH,
+        LEARNING_RATE,
+        MOMENTUM,
+        RANDOM_SEED]  
+
+    performance_recorder = PerformanceRecorder(column_name_list=PERFORMANCE_RECORD_COLUMN_NAME_LIST,
+                                               record_dir=PERFORMANCE_RECORD_DIR,
+                                               key_column_value_list=key_column_value_list,
+                                               logger=system_logger,
+                                               model=model)   
     # Train
-    for epoch_index in range(EPOCH):
+    for epoch_index in tqdm(range(EPOCH)):
         trainer.train_batch(dataloader=train_dataloader, epoch_index=epoch_index, verbose=False)
         trainer.validate_batch(dataloader=validation_dataloader, epoch_index=epoch_index, verbose=False)
-        early_stopper.check_early_stopping(loss=trainer.validation_loss_mean, model=trainer.model)
+
+        early_stopper.check_early_stopping(loss=trainer.validation_loss_mean)
                 
         # Performance record - csv
         performance_recorder.add_row(epoch_index=epoch_index,
@@ -157,7 +164,7 @@ if __name__ == '__main__':
                                      validation_loss=trainer.validation_loss_mean,
                                      train_score=trainer.train_score,
                                      validation_score=trainer.validation_score)
-
+        
         # Performance record - plot
         performance_recorder.save_performance_plot(final_epoch=epoch_index)
 
@@ -167,6 +174,9 @@ if __name__ == '__main__':
         # Early stopping
         if early_stopper.stop:
             break
+    
+    # Save best performance
+    performance_recorder.add_best_row()
 
     # Save config
     save_yaml(os.path.join(performance_recorder.record_dir, 'train_config.yml'), config)
