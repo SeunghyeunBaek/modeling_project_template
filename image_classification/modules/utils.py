@@ -320,23 +320,24 @@ def split_dataset(original_data_dir: str, splitted_data_dir: str,
                                     filename_list=filename_list)                                   # 이미지 저장
         logger.info(copy_msg) if logger else print(copy_msg)
 
-    
-def plot_performance(epoch, train_history:list, validation_history:list, target:str):
 
-    fig = plt.figure(figsize=(12, 5))
-    epoch_range = list(range(epoch))
+  # Deprecated Moved to PerformanceRecorder  
+# def plot_performance(epoch, train_history:list, validation_history:list, target:str):
 
-    plt.plot(epoch_range, train_history, marker='.', c='red', label="train")
-    plt.plot(epoch_range, validation_history, marker='.', c='blue', label="validation")
+#     fig = plt.figure(figsize=(12, 5))
+#     epoch_range = list(range(epoch))
 
-    plt.legend(loc='upper right')
-    plt.grid()
-    plt.xlabel('epoch')
-    plt.ylabel(target)
+#     plt.plot(epoch_range, train_history, marker='.', c='red', label="train")
+#     plt.plot(epoch_range, validation_history, marker='.', c='blue', label="validation")
 
-    return fig
+#     plt.legend(loc='upper right')
+#     plt.grid()
+#     plt.xlabel('epoch')
+#     plt.ylabel(target)
 
+#     return fig
 
+#TODO: 이름 변경 필요
 def get_tpfp_mapper(y_list: list, y_pred_list: list, filename_list: list)-> dict:
     """
     클래스별 tp fp 와 filename 매핑
@@ -366,7 +367,9 @@ def get_tpfp_mapper(y_list: list, y_pred_list: list, filename_list: list)-> dict
 
 
 def count_csv_row(path):
-    
+    """
+    CSV 열 수 세기
+    """
     with open(path, 'r') as f:
         reader = csv.reader(f)
         n_row = sum(1 for row in reader)

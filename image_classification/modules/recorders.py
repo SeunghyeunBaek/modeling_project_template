@@ -3,11 +3,11 @@
     * 성능 기록
 
 TODO:
-    key column value list init 애서 받기 | Done
+    key column value list init 에서 받기 | Done
     key column value list 
 """
 
-from modules.utils import make_directory, plot_performance, count_csv_row
+from modules.utils import make_directory, count_csv_row
 from matplotlib import pyplot as plt
 import numpy as np
 import logging

@@ -16,7 +16,6 @@ class LossEarlyStopper():
     Attributes:
         patience (int): loss가 줄어들지 않아도 학습할 epoch 수
         verbose (bool): 로그 출력 여부, True 일 때 로그 출력
-        weight_path (str): checkpoint 저장 경로
 
         patience_counter (int): loss 가 줄어들지 않을 때 마다 1씩 증가
         min_loss (float): 최소 loss
@@ -47,7 +46,6 @@ class LossEarlyStopper():
 
         Args:
             loss (float):
-            model (`model`): Deprecated
 
         Examples:
             

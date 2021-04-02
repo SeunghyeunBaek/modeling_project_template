@@ -22,7 +22,7 @@ from models.dnn import DNN
 
 from torch.utils.data import DataLoader
 
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from tqdm import tqdm
 import numpy as np
 import random
@@ -65,7 +65,9 @@ MOMENTUM = config['TRAIN']['momentum']
 RANDOM_SEED = config['SEED']['random_seed']
 
 # TRAIN SERIAL: {model_name}_{timestamp}
-TRAIN_START_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
+# time offset set
+KST = timezone(timedelta(hours=9))
+TRAIN_START_TIMESTAMP = datetime.now(tz=KST).strftime("%Y%m%d_%H%M%S")
 TRAIN_SERIAL = MODEL_STR + '_' + TRAIN_START_TIMESTAMP
 
 # PERFORMANCE_RECORD
@@ -108,7 +110,7 @@ if __name__ == '__main__':
                                         num_workers=NUM_WORKERS, 
                                         shuffle=SHUFFLE,
                                         pin_memory=PIN_MEMORY)
-
+    # Load model
     model = get_model(model_str=MODEL_STR)
     model = model(n_input=N_INPUT, n_output=N_OUTPUT).to(device)
 
