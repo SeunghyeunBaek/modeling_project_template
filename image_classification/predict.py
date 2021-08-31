@@ -1,107 +1,116 @@
 """Predict
 
-TODO:
-    Docstring 작성
 """
-from modules.utils import load_yaml, get_logger, save_yaml, make_directory, get_tpfp_mapper
-from modules.metrics import get_metric_function
-from modules.losses import get_loss_function
-from modules.datasets import ImageDataset
-from modules.trainer import BatchTrainer
+from modules.utils import load_yaml, save_pickle, save_yaml, get_logger, make_directory, save_json
 
+from modules.earlystoppers import LossEarlyStopper
+from modules.recorders import Recorder
+from modules.optimizers import get_optimizer
+from modules.datasets import ImageDataset
+from modules.trainer import Trainer
+
+from modules.preprocessor import get_preprocessor
+from modules.metrics import get_metric
+from modules.losses import get_loss
 from models.utils import get_model
 
 from torch.utils.data import DataLoader
-from datetime import datetime
+
+from datetime import datetime, timezone, timedelta
+from tqdm import tqdm
 import numpy as np
 import random
-import torch
 import os
+import copy
 
-# CONFIG
+from apex import amp
+import torch
+
+# Config
 PROJECT_DIR = os.path.dirname(__file__)
-PREDICT_CONFIG_PATH = os.path.join(PROJECT_DIR, 'config/predict_config.yml')
-predict_config = load_yaml(PREDICT_CONFIG_PATH)
+predict_config = load_yaml(os.path.join(PROJECT_DIR, 'config/predict_config.yml'))
 
-# SERIAL
-EXPERIMENT_SERIAL = predict_config['EXPERIMENT']['serial']
-PREDICT_START_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
-PREDICT_SERIAL = EXPERIMENT_SERIAL + '_' + PREDICT_START_TIMESTAMP
+# Serial
+train_serial = predict_config['TRAIN']['train_serial']
+kst = timezone(timedelta(hours=9))
+predict_timestamp = datetime.now(tz=kst).strftime("%Y%m%d_%H%M%S")
+predict_serial = train_serial + '_' + predict_timestamp
 
-# DIRECTORY
-TEST_DATA_DIR = predict_config['DIRECTORY']['data']
-RESULT_DIR = predict_config['DIRECTORY']['result']
-TRAIN_RESULT_DIR = os.path.join(os.path.join(RESULT_DIR, 'train'), EXPERIMENT_SERIAL)
-PREDICT_RESULT_DIR = os.path.join(os.path.join(RESULT_DIR, 'predict'), PREDICT_SERIAL)
+# Predict directory
+PREDICT_DIR = os.path.join(PROJECT_DIR, 'results', 'predict', predict_serial)
+make_directory(PREDICT_DIR)
 
-TRAIN_CONFIG_DIR = os.path.join(TRAIN_RESULT_DIR, 'train_config.yml')
-MODEL_PATH = os.path.join(TRAIN_RESULT_DIR, 'model.pth')
+# Data Directory
+DATA_DIR = os.path.join(PROJECT_DIR,
+                         'data',
+                          predict_config['DIRECTORY']['dataset'],
+                          predict_config['DIRECTORY']['phase'])
 
-# DATALOADER
-train_config = load_yaml(TRAIN_CONFIG_DIR)
-NUM_WORKERS = train_config['DATALOADER']['num_workers']
-PIN_MEMORY = train_config['DATALOADER']['pin_memory']
-DROP_LAST = train_config['DATALOADER']['drop_last']
-
-# MODEL
-MODEL_STR = train_config['TRAIN']['model']
-BATCH_SIZE = train_config['TRAIN']['batch_size']
-METRIC_FUNCTION_STR = train_config['TRAIN']['metric_function']
-LOSS_FUNCTION_STR = train_config['TRAIN']['loss_function']
-N_INPUT = train_config['TRAIN']['n_input']
-N_OUTPUT = train_config['TRAIN']['n_output']
+# Train config
+RECORDER_DIR = os.path.join(PROJECT_DIR, 'results', 'train', train_serial)
+train_config = load_yaml(os.path.join(RECORDER_DIR, 'train_config.yml'))
 
 # SEED
-RANDOM_SEED = train_config['SEED']['random_seed']
+torch.manual_seed(predict_config['PREDICT']['seed'])
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+np.random.seed(predict_config['PREDICT']['seed'])
+random.seed(predict_config['PREDICT']['seed'])
+
+# Gpu
+os.environ['CUDA_VISIBLE_DEVICES'] = str(predict_config['PREDICT']['gpu'])
 
 if __name__ == '__main__':
 
-    # Set random seed
-    torch.manual_seed(RANDOM_SEED)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    np.random.seed(RANDOM_SEED)
-    random.seed(RANDOM_SEED)
-
     # Set device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+    
     # Load data
-    test_dataset = ImageDataset(image_dir=os.path.join(TEST_DATA_DIR, 'image/'),
-                                label_path=os.path.join(TEST_DATA_DIR, 'label.json'))
+    preprocessors = [get_preprocessor(preprocessor) for preprocessor in train_config['PREPROCESS']]
+    test_dataset = ImageDataset(image_dir=os.path.join(DATA_DIR, 'images'),
+                                label_path=os.path.join(DATA_DIR, 'label.json'),
+                                preprocessors=preprocessors)
     test_dataloader = DataLoader(dataset=test_dataset,
-                                 batch_size=BATCH_SIZE,
-                                 num_workers=NUM_WORKERS,
-                                 shuffle=False,
-                                 pin_memory=PIN_MEMORY)
+                                batch_size=train_config['DATALOADER']['batch_size'],
+                                num_workers=train_config['DATALOADER']['num_workers'], 
+                                shuffle=False,
+                                pin_memory=train_config['DATALOADER']['pin_memory'],
+                                drop_last=train_config['DATALOADER']['drop_last'])
 
     # Load model
-    model = get_model(MODEL_STR)
-    model = model(n_input=N_INPUT, n_output=N_OUTPUT).to(device)
-    model.load_state_dict(torch.load(MODEL_PATH))
+    model_name = train_config['TRAINER']['model']
+    model_args = train_config['MODEL'][model_name]
+    model = get_model(model_name=model_name, model_args=model_args).to(device)
 
-    loss_function = get_loss_function(loss_function_str=LOSS_FUNCTION_STR)
-    metric_function = get_metric_function(metric_function_str=METRIC_FUNCTION_STR)
-
-    # Set trainer
-    trainer = BatchTrainer(model=model,
-                           loss_function=loss_function,
-                           metric_function=metric_function,
-                           device=device)
-
-    # Test
-    trainer.validate_batch(dataloader=test_dataloader, verbose=False)
+    checkpoint = torch.load(os.path.join(RECORDER_DIR, 'model.pt'))
     
-    # Save test result
-    make_directory(PREDICT_RESULT_DIR)
-    predict_result_dict = {
-        'test_target_list': trainer.validation_target_list,
-        'test_target_pred_list': trainer.validation_target_pred_list,
-        'test_filename_list': trainer.validation_image_filename_list,
-        'test_loss': float(trainer.validation_loss_mean),
-        'test_score': float(trainer.validation_score),
-    }
+    #!AMP
+    if train_config['TRAINER']['amp'] == True:
+        model = amp.initialize(model, opt_level='O1')
+        model.load_state_dict(checkpoint['model'])
+        amp.load_state_dict(checkpoint['amp'])
+    else:
+        model.load_state_dict(checkpoint['model'])
 
-    save_yaml(os.path.join(PREDICT_RESULT_DIR, 'record.yml'), predict_result_dict)
-    save_yaml(os.path.join(PREDICT_RESULT_DIR, 'train_config.yml'), train_config)
-    save_yaml(os.path.join(PREDICT_RESULT_DIR, 'predict_config.yml'), predict_config)
+    model.eval()
+
+    gt_dict, pred_dict = dict(), dict()
+
+    y_logits_dir = os.path.join(PREDICT_DIR, 'y_logits')
+    make_directory(y_logits_dir)
+
+    for batch_index, (x, y, filename) in enumerate(tqdm(test_dataloader)):
+        x = x.to(device)
+        y_logits = model(x).cpu()
+        y_pred = torch.argmax(y_logits, dim=1)
+        y_logits = y_logits.detach().numpy()
+        y_pred = y_pred.detach().numpy()
+        y = y.numpy()
+
+        for y_, filename_, y_logit, y_pred_ in zip(y, filename, y_logits, y_pred):
+            gt_dict[filename_] = int(y_)
+            pred_dict[filename_] = int(y_pred_)
+            save_pickle(os.path.join(y_logits_dir, filename_+'.pkl'), y_logit)
+
+    save_json(os.path.join(PREDICT_DIR, 'gt.json'), gt_dict)
+    save_json(os.path.join(PREDICT_DIR, 'pred.json'), pred_dict)

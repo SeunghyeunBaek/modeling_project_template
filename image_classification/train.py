@@ -10,175 +10,242 @@ TODO:
 """
 
 from modules.utils import load_yaml, save_yaml, get_logger, make_directory
-from modules.earlystoppers import LossEarlyStopper
-from modules.recorders import PerformanceRecorder
-from modules.metrics import get_metric_function
-from modules.losses import get_loss_function
-from modules.optimizers import get_optimizer
+
+from modules.earlystoppers import EarlyStopper
+from modules.recorders import Recorder
 from modules.datasets import ImageDataset
-from modules.trainer import BatchTrainer
+from modules.trainer import Trainer
+
+from modules.preprocessor import get_preprocessor
+from modules.optimizers import get_optimizer
+from modules.metrics import get_metric
+from modules.losses import get_loss
 from models.utils import get_model
-from models.dnn import DNN
 
 from torch.utils.data import DataLoader
+import torch
 
 from datetime import datetime, timezone, timedelta
-from tqdm import tqdm
 import numpy as np
 import random
 import os
+import copy
 
-import torch
+from apex import amp
+import wandb
 
-# CONFIG
+# Root directory
 PROJECT_DIR = os.path.dirname(__file__)
-TRAIN_CONFIG_PATH = os.path.join(PROJECT_DIR, 'config/train_config.yml')
-SYSTEM_LOGGER_PATH = os.path.join(PROJECT_DIR, 'log/train.log')
-config = load_yaml(TRAIN_CONFIG_PATH)
 
-# DIRECTORY
-DATA_DIR = config['DIRECTORY']['original_splitted_data']
-TRAIN_DATA_DIR = os.path.join(DATA_DIR, 'train')
-VALIDATION_DATA_DIR = os.path.join(DATA_DIR, 'validation')
+# Load config
+config_path = os.path.join(PROJECT_DIR, 'config', 'train_config.yml')
+config = load_yaml(config_path)
 
-# DATALOADER
-NUM_WORKERS = config['DATALOADER']['num_workers']
-SHUFFLE = config['DATALOADER']['shuffle']
-PIN_MEMORY = config['DATALOADER']['pin_memory']
-DROP_LAST = config['DATALOADER']['drop_last']
+# Train Serial
+kst = timezone(timedelta(hours=9))
+train_serial = datetime.now(tz=kst).strftime("%Y%m%d_%H%M%S")
 
-# TRAIN
-MODEL_STR = config['TRAIN']['model']
-N_INPUT = config['TRAIN']['n_input']
-N_OUTPUT = config['TRAIN']['n_output']
-OPTIMIZER_STR = config['TRAIN']['optimizer']
-LOSS_FUNCTION_STR = config['TRAIN']['loss_function']
-METRIC_FUNCTION_STR = config['TRAIN']['metric_function']
-EARLY_STOPPING_PATIENCE = config['TRAIN']['early_stopping_patience']
+# Recorder directory
+RECORDER_DIR = os.path.join(PROJECT_DIR, 'results', 'train', train_serial)
+make_directory(RECORDER_DIR)
 
-BATCH_SIZE = config['TRAIN']['batch_size']
-EPOCH = config['TRAIN']['epoch']
-LEARNING_RATE = config['TRAIN']['learning_rate']
-MOMENTUM = config['TRAIN']['momentum']
+# Data directory
+DATA_DIR = os.path.join(PROJECT_DIR, 'data', config['DIRECTORY']['dataset'])
 
-# SEED
-RANDOM_SEED = config['SEED']['random_seed']
+# Seed
+torch.manual_seed(config['TRAINER']['seed'])
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+np.random.seed(config['TRAINER']['seed'])
+random.seed(config['TRAINER']['seed'])
 
-# TRAIN SERIAL: {model_name}_{timestamp}
-# time offset set
-KST = timezone(timedelta(hours=9))
-TRAIN_START_TIMESTAMP = datetime.now(tz=KST).strftime("%Y%m%d_%H%M%S")
-TRAIN_SERIAL = MODEL_STR + '_' + TRAIN_START_TIMESTAMP
-
-# PERFORMANCE_RECORD
-PERFORMANCE_RECORD_COLUMN_NAME_LIST = config['PERFORMANCE_RECORD']['column_list']
-PERFORMANCE_RECORD_DIR = os.path.join(config['DIRECTORY']['performance_record'], TRAIN_SERIAL)
+# GPU
+os.environ['CUDA_VISIBLE_DEVICES'] = str(config['TRAINER']['gpu'])
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 if __name__ == '__main__':
-
-    # Set random seed
-    torch.manual_seed(RANDOM_SEED)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    np.random.seed(RANDOM_SEED)
-    random.seed(RANDOM_SEED)
     
-    # Set device
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    
-    # Set train result directory
-    make_directory(PERFORMANCE_RECORD_DIR)
+    """
+    00. Set Logger
+    """
+    logger = get_logger(name='train', dir_=RECORDER_DIR, stream=False)
+    logger.info(f"Set Logger {RECORDER_DIR}")
 
-    # Set system logger: 로거 객체
-    system_logger = get_logger(name='train',
-                               file_path=os.path.join(PERFORMANCE_RECORD_DIR, 'train_log.log'))
+    """
+    01. Load data
+    """
+    # Load preprocessors
+    preprocessors = [get_preprocessor(preprocessor) for preprocessor in config['PREPROCESS']]
 
-    # Load dataset
-    train_dataset = ImageDataset(image_dir=os.path.join(TRAIN_DATA_DIR, 'image/'),
-                                 label_path=os.path.join(TRAIN_DATA_DIR, 'label.json'))
-    validation_dataset = ImageDataset(image_dir=os.path.join(VALIDATION_DATA_DIR, 'image/'),
-                                      label_path=os.path.join(VALIDATION_DATA_DIR, 'label.json'))
+    # Dataset
+    train_dataset = ImageDataset(image_dir=os.path.join(DATA_DIR, 'train', 'images'),
+                                 label_path=os.path.join(DATA_DIR, 'train', 'label.json'),
+                                 preprocessors=preprocessors)
+    val_dataset = ImageDataset(image_dir=os.path.join(DATA_DIR, 'val', 'images'),
+                               label_path=os.path.join(DATA_DIR, 'val', 'label.json'),
+                               preprocessors=preprocessors)
+    test_dataset = ImageDataset(image_dir=os.path.join(DATA_DIR, 'test', 'images'),
+                                label_path=os.path.join(DATA_DIR, 'test', 'label.json'),
+                                preprocessors=preprocessors)
 
-    # Load dataloader
+    # DataLoader
     train_dataloader = DataLoader(dataset=train_dataset,
-                                  batch_size=BATCH_SIZE,
-                                  num_workers=NUM_WORKERS, 
-                                  shuffle=SHUFFLE,
-                                  pin_memory=PIN_MEMORY)
-    validation_dataloader = DataLoader(dataset=validation_dataset,
-                                        batch_size=BATCH_SIZE,
-                                        num_workers=NUM_WORKERS, 
-                                        shuffle=SHUFFLE,
-                                        pin_memory=PIN_MEMORY)
+                                  batch_size=config['DATALOADER']['batch_size'],
+                                  num_workers=config['DATALOADER']['num_workers'], 
+                                  shuffle=config['DATALOADER']['shuffle'],
+                                  pin_memory=config['DATALOADER']['pin_memory'],
+                                  drop_last=config['DATALOADER']['drop_last'])
+    val_dataloader = DataLoader(dataset=val_dataset,
+                                batch_size=config['DATALOADER']['batch_size'],
+                                num_workers=config['DATALOADER']['num_workers'], 
+                                shuffle=False,
+                                pin_memory=config['DATALOADER']['pin_memory'],
+                                drop_last=config['DATALOADER']['drop_last'])
+    test_dataloader = DataLoader(dataset=test_dataset,
+                                batch_size=config['DATALOADER']['batch_size'],
+                                num_workers=config['DATALOADER']['num_workers'], 
+                                shuffle=False,
+                                pin_memory=config['DATALOADER']['pin_memory'],
+                                drop_last=config['DATALOADER']['drop_last'])
+
+    logger.info(f"Load data, train:{len(train_dataset)} val:{len(val_dataset)} test: {len(test_dataset)}")
+
+    """
+    02. Set model
+    """
     # Load model
-    model = get_model(model_str=MODEL_STR)
-    model = model(n_input=N_INPUT, n_output=N_OUTPUT).to(device)
+    model_name = config['TRAINER']['model']
+    model_args = config['MODEL'][model_name]
+    model = get_model(model_name=model_name, model_args=model_args).to(device)
 
-    # Load optimizerm loss function, metric function
-    optimizer = get_optimizer(optimizer_str=OPTIMIZER_STR)
-    optimizer = optimizer(model.parameters(), lr=LEARNING_RATE, momentum=MOMENTUM)
-    loss_function = get_loss_function(loss_function_str=LOSS_FUNCTION_STR)
-    metric_function = get_metric_function(metric_function_str=METRIC_FUNCTION_STR)
+    """
+    03. Set trainer
+    """
+    # Optimizer
+    optimizer = get_optimizer(optimizer_name=config['TRAINER']['optimizer'])
+    optimizer = optimizer(params=model.parameters(),lr=config['TRAINER']['learning_rate'])
 
-    # Batch trainer
-    trainer = BatchTrainer(model=model,
-                           optimizer=optimizer,
-                           loss_function=loss_function,
-                           metric_function=metric_function,
-                           device=device,
-                           logger=system_logger)
+    # Loss
+    loss = get_loss(loss_name=config['TRAINER']['loss'])
+    
+    # Metric
+    metrics = {metric_name: get_metric(metric_name) for metric_name in config['TRAINER']['metric']}
+    
+    # Early stoppper
+    early_stopper = EarlyStopper(patience=config['TRAINER']['early_stopping_patience'],
+                                mode=config['TRAINER']['early_stopping_mode'],
+                                logger=logger)
+    # AMP
+    if config['TRAINER']['amp'] == True:
+        model, optimizer = amp.initialize(model, optimizer, opt_level='O1')
 
-    # Early stopper
-    early_stopper = LossEarlyStopper(patience=EARLY_STOPPING_PATIENCE,
-                                     logger=system_logger,
-                                     verbose=True)
+    # Trainer
+    trainer = Trainer(model=model,
+                      optimizer=optimizer,
+                      loss=loss,
+                      metrics=metrics,
+                      device=device,
+                      logger=logger,
+                      amp=amp if config['TRAINER']['amp'] else None,
+                      interval=config['LOGGER']['logging_interval'])
+    
+    """
+    Logger
+    """
+    # Recorder
+    recorder = Recorder(record_dir=RECORDER_DIR,
+                        model=model,
+                        optimizer=optimizer,
+                        scheduler=None,
+                        amp=amp if config['TRAINER']['amp'] else None,
+                        logger=logger)
 
-    # Set performance_recorder: 성능을 기록하는 객체
-    key_column_value_list = [
-        TRAIN_SERIAL,
-        TRAIN_START_TIMESTAMP,
-        MODEL_STR,
-        OPTIMIZER_STR,
-        LOSS_FUNCTION_STR,
-        METRIC_FUNCTION_STR,
-        EARLY_STOPPING_PATIENCE,
-        BATCH_SIZE,
-        EPOCH,
-        LEARNING_RATE,
-        MOMENTUM,
-        RANDOM_SEED]  
+    # !Wandb
+    if config['LOGGER']['wandb'] == True:
+        wandb_project_serial = 'template'
+        wandb_username =  'shbaek'
+        wandb.init(project=wandb_project_serial, dir=RECORDER_DIR, entity=wandb_username)
+        wandb.run.name = train_serial
+        wandb.config.update(config)
+        wandb.watch(model)
 
-    performance_recorder = PerformanceRecorder(column_name_list=PERFORMANCE_RECORD_COLUMN_NAME_LIST,
-                                               record_dir=PERFORMANCE_RECORD_DIR,
-                                               key_column_value_list=key_column_value_list,
-                                               logger=system_logger,
-                                               model=model)   
+    # Save train config
+    save_yaml(os.path.join(RECORDER_DIR, 'train_config.yml'), config)
+
+    """
+    04. TRAIN
+    """
     # Train
-    for epoch_index in tqdm(range(EPOCH)):
-        trainer.train_batch(dataloader=train_dataloader, epoch_index=epoch_index, verbose=False)
-        trainer.validate_batch(dataloader=validation_dataloader, epoch_index=epoch_index, verbose=False)
+    n_epochs = config['TRAINER']['n_epochs']
+    for epoch_index in range(n_epochs):
 
-        early_stopper.check_early_stopping(loss=trainer.validation_loss_mean)
-                
-        # Performance record - csv
-        performance_recorder.add_row(epoch_index=epoch_index,
-                                     train_loss=trainer.train_loss_mean,
-                                     validation_loss=trainer.validation_loss_mean,
-                                     train_score=trainer.train_score,
-                                     validation_score=trainer.validation_score)
+        # Set Recorder row
+        row_dict = dict()
+        row_dict['epoch_index'] = epoch_index
+        row_dict['train_serial'] = train_serial
         
-        # Performance record - plot
-        performance_recorder.save_performance_plot(final_epoch=epoch_index)
+        """
+        Train
+        """
+        print(f"Train {epoch_index}/{n_epochs}")
+        logger.info(f"--Train {epoch_index}/{n_epochs}")
+        trainer.train(dataloader=train_dataloader, epoch_index=epoch_index, mode='train')
+        
+        row_dict['train_loss'] = trainer.loss_mean
+        row_dict['train_elapsed_time'] = trainer.elapsed_time 
+        for metric_str, score in trainer.score_dict.items():
+            row_dict[f"train_{metric_str}"] = score
+        trainer.clear_history()
 
-        # Clear trainer epoch history
+        """
+        Validation
+        """
+        print(f"Val {epoch_index}/{n_epochs}")
+        logger.info(f"--Val {epoch_index}/{n_epochs}")
+        trainer.train(dataloader=val_dataloader, epoch_index=epoch_index, mode='val')
+        
+        row_dict['val_loss'] = trainer.loss_mean
+        row_dict['val_elapsed_time'] = trainer.elapsed_time 
+        for metric_str, score in trainer.score_dict.items():
+            row_dict[f"val_{metric_str}"] = score
+        trainer.clear_history()
+
+        """
+        Test
+        """
+        print(f"Test {epoch_index}/{n_epochs}")
+        logger.info(f"--Test {epoch_index}/{n_epochs}")
+        trainer.train(dataloader=test_dataloader, epoch_index=epoch_index, mode='test')
+        
+        row_dict['test_loss'] = trainer.loss_mean
+        row_dict['test_elapsed_time'] = trainer.elapsed_time 
+        for metric_str, score in trainer.score_dict.items():
+            row_dict[f"test_{metric_str}"] = score
         trainer.clear_history()
         
-        # Early stopping
-        if early_stopper.stop:
-            break
-    
-    # Save best performance
-    performance_recorder.add_best_row()
+        """
+        Record
+        """
+        recorder.add_row(row_dict)
+        recorder.save_plot(config['LOGGER']['plot'])
 
-    # Save config
-    save_yaml(os.path.join(performance_recorder.record_dir, 'train_config.yml'), config)
+        #!WANDB
+        if config['LOGGER']['wandb'] == True:
+            wandb.log(row_dict)
+
+        """
+        Early stopper
+        """
+        early_stopping_target = config['TRAINER']['early_stopping_target']
+        early_stopper.check_early_stopping(loss=row_dict[early_stopping_target])
+
+        if early_stopper.patience_counter == 0:
+            recorder.save_weight(epoch=epoch_index)
+            best_row_dict = copy.deepcopy(row_dict)
+        
+        if early_stopper.stop == True:
+            logger.info(f"Eearly stopped, coutner {early_stopper.patience_counter}/{config['TRAINER']['early_stopping_patience']}")
+            
+            if config['LOGGER']['wandb'] == True:
+                wandb.log(best_row_dict)
+            break

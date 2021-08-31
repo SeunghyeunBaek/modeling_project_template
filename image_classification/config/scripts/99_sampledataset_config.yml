@@ -1,0 +1,7 @@
+DATASET:
+  src_dataset: 01_splitdataset
+  dst_dataset: 99_sampledataset
+
+SAMPLE:
+  ratio: 0.01
+  seed: 42

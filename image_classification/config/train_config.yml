@@ -1,54 +1,45 @@
 DIRECTORY:
-  original_data: /workspace/template_project/image_classification/data/original/
-  original_splitted_data: /workspace/template_project/image_classification/data/original_splitted/
-  preprocessed_data: /workspace/template_project/image_classification/data/preprocessed/
-  # system_log: /workspace/template_project/image_classification/log/  -- deprecated
-  performance_record: /workspace/template_project/image_classification/results/train/
+  dataset: 01_splitdataset
 
-SEED:
-  random_seed: 42
+PREPROCESS:
+  - flatten
+  - normalize
 
-SPLIT_DATA:
-  train_ratio: 0.8
-  validation_ratio: 0.1
-  test_ratio: 0.1
-  is_stratify: True
-
-TRAIN:
-  model: DNN  # DNN 
-  n_input: 784
-  n_output: 10
-  batch_size: 8
-  epoch: 30
-  learning_rate: 0.0001
-  momentum: 0.5
-  optimizer: sgd  # SGD
-  loss_function: nll  # nll
-  metric_function: accuracy # accuracy
-  early_stopping_patience: 5
+AUGMENTATION:
+  
+TRAINER :
+  model: Linear
+  optimizer: adamw
+  learning_rate: 5.0e-4
+  loss: crossentropy
+  metric:
+    - accuracy
+    - f1macro
+  n_epochs: 200
+  early_stopping_target: val_accuracy
+  early_stopping_patience: 10
+  early_stopping_mode: max
+  amp: False
+  gpu: 0
+  seed: 42
+  
+MODEL:
+  Linear:
+    n_inputs:  784
+    n_outputs: 10
 
 DATALOADER:
-  num_workers: 16
+  batch_size: 128
+  num_workers: 4
   shuffle: True
   pin_memory: True
-  drop_last: True
+  drop_last: False
 
-PERFORMANCE_RECORD:
-  column_list: 
-    - train_serial
-    - train_timestamp
-    - model_str
-    - optimizer_str
-    - loss_function_str
-    - metric_function_str
-    - early_stopping_patience
-    - batch_size
-    - epoch
-    - learning_rate
-    - momentum
-    - random_seed # -----------key columns-------------
-    - epoch_index 
-    - train_loss
-    - validation_loss
-    - train_score
-    - validation_score
+LOGGER:
+  wandb: False
+  logging_interval: 100
+  plot:
+    - loss
+    - accuracy
+    - f1macro
+    - elapsed_time

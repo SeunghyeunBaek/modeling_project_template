@@ -1,0 +1,16 @@
+tqdm
+pyyaml
+numpy
+pandas
+scikit-learn
+opencv-python-headless
+matplotlib
+wandb
+
+# pytorch(https://pytorch.org/get-started/previous-versions/)
+# pip install torch==1.7.1+cu101 torchvision==0.8.2+cu101 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+
+# Nvidia apex(https://github.com/NVIDIA/apex)
+# git clone https://github.com/NVIDIA/apex
+# cd apex
+# pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./

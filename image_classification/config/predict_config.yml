@@ -1,7 +1,10 @@
 DIRECTORY:
-  data: /workspace/template_project/image_classification/data/sample10_splitted/test/
-  result: /workspace/template_project/image_classification/results/
-  
-EXPERIMENT:
-  serial: DNN_20210330_100130
+  dataset: 99_sampledataset
+  phase: test
 
+TRAIN:
+  train_serial: '20210829_170539'
+
+PREDICT:
+  seed: 42
+  gpu: 0

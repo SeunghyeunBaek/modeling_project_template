@@ -1,0 +1,9 @@
+DATASET:
+  src_dataset: 00_source
+  dst_dataset: 01_splitdataset 
+
+SPLIT:
+  train: 0.8
+  val: 0.1
+  test: 0.1
+  seed: 42

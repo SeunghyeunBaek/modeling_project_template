@@ -1,50 +1,45 @@
 """Dataset 정의
-
-TODO:
-    image_filename 추가
-
 """
 
 from torch.utils.data import Dataset
 from modules.utils import load_json
-#from module_processor.preprocessor import scale, flatten
+import numpy as np
 import cv2
 import os
 
 
 class ImageDataset(Dataset):
-    """데이터셋 정의
-    """
     
-    def __init__ (self, image_dir: str, label_path: str):
+    def __init__ (self, image_dir: str, label_path: str, preprocessors: list):
         self.image_dir = image_dir
-        self.label_dict = load_json(label_path)
-        self.image_filename_list = sorted(list(self.label_dict.keys()))
+        self.label = load_json(label_path)
+        self.preprocessors = preprocessors
+        self.filenames = sorted(list(self.label.keys()))
+        
 
     def __len__(self):
-        return len(self.label_dict.keys())
+        return len(self.filenames)
 
     def __getitem__(self, index: int):
-        image_filename = self.image_filename_list[index]
-        image_path = os.path.join(self.image_dir, image_filename)
+        """
+        Args:
+            index(int):
+        Returns:
+            image(np.ndarray):
+            target(int):
+            filename(str):
+        """
+        filename = self.filenames[index]
+        path_ = os.path.join(self.image_dir, filename)
         
-        image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+        image = cv2.imread(path_, cv2.IMREAD_GRAYSCALE)
+        target = self.label[filename]
         
         # Preprocessing
-        # image = scale(image)
-        # image = flatten(image)
-        image = image.reshape(-1, 784)
-
-        target = self.label_dict[image_filename]
-
-        #return image, target
-        # item_dict = {
-        #     'image': image,
-        #     'target': target,
-        #     'image_filename': image_filename
-        # }
+        for preprocess in self.preprocessors:
+            image = preprocess(image)
         
-        return image, target, image_filename
+        return image, target, filename
 
 if __name__ == '__main__':
     pass

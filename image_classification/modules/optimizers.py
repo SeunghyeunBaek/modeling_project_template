@@ -1,13 +1,15 @@
 import torch.optim as optim
 
-def get_optimizer(optimizer_str: str)-> 'optimizer':
+def get_optimizer(optimizer_name: str):
 
-    if optimizer_str == 'sgd':
+    if optimizer_name == 'sgd':
 
-        optimizer = optim.SGD
+        return optim.SGD
 
-    return optimizer
+    elif optimizer_name == 'adam':
 
+        return optim.Adam
+    
+    elif optimizer_name == 'adamw':
 
-if __name__ == '__main__':
-    pass
+        return optim.AdamW

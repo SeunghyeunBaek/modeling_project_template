@@ -1,201 +1,116 @@
 """
-TODO:
-    * APM scaler 추가
-    * metric 함수 추가 | done
-    * filename 추가 | done
+Trainer
 """
 
-# from torch.cuda.amp import GradScaler, autocast
 import numpy as np
-import logging
 import torch
-import csv
-import os
 
-    
-class BatchTrainer():
-    """Trainer
-    
-    Attribues:
-        loss_function (Callable):
-        optimizer (`optimizer`):
-        model (`model`):
-        device (str):
-        logger (logging.RootLogger):
-        metric_function (callable):
-        train_loss_sum (float):
-        train_loss_mean (float):
-        validation_loss_sum (float):
-        validation_loss_mean (float):
-    """
+from time import time
+from tqdm import tqdm
+# from apex import amp
 
-    def __init__(self, model, loss_function, device, metric_function, optimizer=None, logger=None):
+class Trainer():
+
+    def __init__(self,
+                 model,
+                 optimizer,
+                 loss,
+                 metrics,
+                 device,
+                 logger, 
+                 amp,
+                 interval=100):
         
-        # Train config
-        self.loss_function = loss_function
-        self.optimizer = optimizer
         self.model = model
+        self.optimizer = optimizer
+        self.loss = loss
+        self.metrics = metrics
         self.device = device
         self.logger = logger
-        self.metric_function = metric_function
+        self.amp = amp
+        self.interval = interval
+
+        # History
+        self.loss_sum = 0  # Epoch loss sum
+        self.loss_mean = 0 # Epoch loss mean
+        self.filenames = list()
+        self.y = list()
+        self.y_preds = list()
+        self.score_dict = dict()  # metric score
+        self.elapsed_time = 0
         
-        # History - loss
-        self.train_batch_loss_mean_list = list()
-        self.train_batch_score_list = list()
 
-        self.validation_batch_loss_mean_list = list()
-        self.validation_batch_score_list = list()
+    def train(self, mode, dataloader, epoch_index=0):
+        """
+        x: (batch, width*height)
+        y: (batch, 1)
+        y_pred_proba: (batch, class)
+        """
+        start_timestamp = time()
 
-        # History - predict
-        self.train_target_list = list()
-        self.train_target_pred_list = list()
-
-        self.validation_target_list = list()
-        self.validation_target_pred_list = list()
-
-        # History - filename
-        self.train_image_filename_list = list()
-        self.validation_image_filename_list = list()
-
-        # Output
-        self.train_score = 0
-        self.train_loss_mean = 0
-        self.train_loss_sum = 0
+        if mode == 'train':
+            self.model.train()
         
-        self.validation_score = 0
-        self.validation_loss_mean = 0
-        self.validation_loss_sum = 0
+        elif mode in ['val', 'test']:
+            self.model.eval()
 
-    def train_batch(self, dataloader, epoch_index=0, verbose=False, logging_interval=1):
-        
-        self.model.train()
+        for batch_index, (x, y, filename) in enumerate(tqdm(dataloader)):
+            
+            x, y = x.to(self.device, dtype=torch.float), y.to(self.device, dtype=torch.long)
 
-        # for batch_index, (image, target) in enumerate(dataloader):
-        for batch_index, (image, target, image_filename) in enumerate(dataloader):
-            image, target = image.to(self.device), target.to(self.device)
-
-            self.optimizer.zero_grad()
-
+            # Inference
+            y_pred_proba = self.model(x)
+            
             # Loss
-            target_pred_proba = self.model(image)
-            batch_loss_mean = self.loss_function(target_pred_proba, target, reduction='mean')
-            batch_loss_sum = batch_loss_mean.item() * len(image)
-            self.train_batch_loss_mean_list.append(batch_loss_mean)
-            self.train_loss_sum += batch_loss_sum
+            loss = self.loss(y_pred_proba, y, reduction='mean') # TODO
             
-            # Metric
-            target_pred_list = target_pred_proba.argmax(dim=1).cpu().tolist()
-            target_list = target.cpu().tolist()
-            batch_score = self.metric_function(target_list, target_pred_list)
-
-            # History - loss
-            self.train_batch_score_list.append(batch_score)
-
-            # History - predict
-            self.train_target_list += target_list
-            self.train_target_pred_list += target_pred_list
-
-            # History - filename
-            self.train_image_filename_list += image_filename
-
             # Update
-            batch_loss_mean.backward()
-            self.optimizer.step()
-
-            # Log verbose
-            if verbose & (batch_index % logging_interval == 0):
-                msg = f"Epoch {epoch_index} train batch {batch_index}/{len(dataloader)}: {batch_index * len(image)}/{len(dataloader.dataset)} mean loss: {batch_loss_mean} score: {batch_score}"
-                self.logger.info(msg) if self.logger else print(msg)
-
-        self.train_loss_mean = self.train_loss_sum / len(dataloader.dataset)
-        self.train_score = self.metric_function(self.train_target_list, self.train_target_pred_list)
-
-        msg = f"Epoch {epoch_index}, Train, Mean loss: {self.train_loss_mean}, Accuracy: {self.train_score}"
-        self.logger.info(msg) if self.logger else print(msg)
-        
-    def validate_batch(self, dataloader, epoch_index=0, verbose=False, logging_interval=1):
-
-        self.model.eval()
-
-        with torch.no_grad():
-            
-            # for batch_index, (image, target) in enumerate(dataloader):
-            for batch_index, (image, target, image_filename) in enumerate(dataloader):
-                image, target = image.to(self.device), target.to(self.device)
+            if mode == 'train':
                 
-                # Loss
-                target_pred_proba = self.model(image)                
-                batch_loss_mean = self.loss_function(target_pred_proba, target, reduction='mean').item()
-                batch_loss_sum = batch_loss_mean * len(image)
-                self.validation_batch_loss_mean_list.append(batch_loss_mean)
-                self.validation_loss_sum += batch_loss_sum
+                self.optimizer.zero_grad()
+                
+                if self.amp is None:
+                    loss.backward()
 
-                # Metric
-                target_pred_list = target_pred_proba.argmax(dim=1).cpu().tolist()
-                target_list = target.cpu().tolist()
-                batch_score = self.metric_function(target_list, target_pred_list)
-
-                # History - loss
-                self.validation_batch_score_list.append(batch_score)
-
-                # History - predict
-                self.validation_target_list += target_list
-                self.validation_target_pred_list += target_pred_list
-
-                # History - filename
-                self.validation_image_filename_list += image_filename
-
-                # Log verbose
-                if verbose & (batch_index % logging_interval == 0):
-                    msg = f"Validation epoch {epoch_index} batch {batch_index}/{len(dataloader)}: {batch_index * len(image)}/{len(dataloader.dataset)} mean loss: {batch_loss_mean} accuracy: {batch_score}"
-                    self.logger.info(msg) if self.logger else print(msg)
-
-            self.validation_loss_mean = self.validation_loss_sum / len(dataloader.dataset)
-            self.validation_score = self.metric_function(self.validation_target_list, self.validation_target_pred_list)
+                else:
+                    with self.amp.scale_loss(loss, self.optimizer) as scaled_loss:
+                        scaled_loss.backward()
+                
+                self.optimizer.step()
+                
+            elif mode in ['val', 'test']:
+                pass
             
-            msg = f"Epoch {epoch_index}, Validation, Mean loss: {self.validation_loss_mean}, Accuracy: {self.validation_score}"
-            self.logger.info(msg) if self.logger else print(msg)
+            # History
+            self.filenames += filename
+            self.loss_sum += loss.item()
+            self.y_preds.append(y_pred_proba.argmax(dim=1))
+            self.y.append(y)
+
+            # Logging
+            if batch_index % self.interval == 0:
+                msg = f"batch: {batch_index}/{len(dataloader)} loss: {loss.item()}"
+                self.logger.info(msg)
+                
+        # Epoch history
+        self.loss_mean = self.loss_sum / len(dataloader)  # Epoch loss mean
+
+        # Metric
+        self.y_preds = torch.cat(self.y_preds, dim=0).cpu().tolist()
+        self.y = torch.cat(self.y, dim=0).cpu().tolist() 
+        
+        for metric_name, metric_func in self.metrics.items():
+            score = metric_func(self.y, self.y_preds)
+            self.score_dict[metric_name] = score
+
+        # Elapsed time
+        end_timestamp = time()
+        self.elapsed_time = end_timestamp - start_timestamp
 
     def clear_history(self):
-        """한 epoch 종료 후 history 초기화
-            
-            실험 당 BatchTrainer 를 한번만 생성하기 떄문에 한 epoch 이 끝나면 history 를 반드시 초기화 해야함
-            list 초기화: BatchTrainer 에서 정의한 모든 list 형태의 attribute 는 배치마다 계속 element 를 적재하는 형태로 구현
-            sum 초기화: BatchTrainer 에서 정의한 모든 _sum attribute 는 누적 합계
-
-            Examples:
-                >>for epoch_index in range(EPOCH):
-                >>    trainer.train_batch(dataloader=train_dataloader, epoch_index=epoch_index, verbose=False)
-                >>    trainer.validate_batch(dataloader=validation_dataloader, epoch_index=epoch_index, verbose=False)
-                >>    trainer.clear_history()
-        """
-
-        # History - loss
-        self.train_batch_loss_mean_list = list()
-        self.train_batch_score_list = list()
-
-        self.validation_batch_loss_mean_list = list()
-        self.validation_batch_score_list = list()
-
-        # History - predict
-        self.train_target_list = list()
-        self.train_target_pred_list = list()
-
-        self.validation_target_list = list()
-        self.validation_target_pred_list = list()
-
-        # History - filename
-        self.train_image_filename_list = list()
-        self.validation_image_filename_list = list()
-
-        # Output
-        self.train_score = 0
-        self.train_loss_mean = 0
-        self.train_loss_sum = 0
-        
-        self.validation_score = 0
-        self.validation_loss_mean = 0
-        self.validation_loss_sum = 0
-                         
-if __name__ == '__main__':
-    pass
+        self.loss_sum = 0
+        self.loss_mean = 0
+        self.y_preds = list()
+        self.y = list()
+        self.score_dict = dict()
+        self.elapsed_time = 0

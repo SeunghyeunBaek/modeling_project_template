@@ -1,14 +1,15 @@
 from torch.nn import functional as F
 import torch
+import torch.nn as nn
 
 
-def get_loss_function(loss_function_str: str):
+def get_loss(loss_name: str):
 
-    if loss_function_str == 'nll':
+    if loss_name == 'crossentropy':
 
-        return F.nll_loss
+        return F.cross_entropy
 
-    elif loss_function_str == 'focal':
+    elif loss_name == 'focal':
 
         return FocalLoss
 

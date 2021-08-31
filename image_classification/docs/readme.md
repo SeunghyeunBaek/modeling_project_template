@@ -1,38 +1,13 @@
+## 환경세팅
 
-## TODO
-* split_data 버전관리
-* 학습 로깅 시스템 | done
-* 학습 결과물 저장 경로 구성 | TBD
-* Ealry stopping 모델 저장 기능 분리
-
-## 작업 현황
-
-split_data.py | done <br>
-postprocess.py <br>
-preprocess.py <br>
-predict_ensemble.py <br>
-predict.py <br>
-evaluate.py <br>
-train.py <br> | done
-test.py <br>
-
-
-## version name convention
-**TBD**
-* train_{모델명}_{timestamp}
-* predict_{모델명}_{timestamp}
-
-## Random seed
-
-```python
-def set_seed(seed: int):
-    torch.manual_seed(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    np.random.seed(seed)
-    random.seed(seed)
-```
-
-## Reference
-* [MNIST DNN부터 CNN까지](https://korchris.github.io/2019/08/23/mnist/)
-* [모델 저장](https://cvml.tistory.com/8)
+01. 데이터 옮기기
+    01-01 ./archive/00_source.zip 을 ./data 안에 압축 해제(./data/00_source)
+    
+02. 라이브러리 설치
+    02-01 pip install ./requirements.txt 실행
+    02-02 pytorch 설치(https://pytorch.org/get-started/previous-versions/ 에서 사용환경에 맞는 버전 찾아서 설치)
+        - pip install torch==1.7.1+cu101 torchvision==0.8.2+cu101 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+    02-03 apex 설치(./archive 내에서 아래 명령어 순서대로 실행)
+        - git clone https://github.com/NVIDIA/apex
+        - cd apex
+        - pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
